@@ -291,9 +291,9 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const head = getSquareCoord(snake.head);
           const tail = getSquareCoord(snake.tail);
 
-          // Head of snake on the upper right corner of the box:
-          const hx = head.colFromLeft * 100 + 78;
-          const hy = head.rowFromTop * 100 + 24;
+          // Head of snake tucked tightly into the upper-right corner of the box:
+          const hx = head.colFromLeft * 100 + 84;
+          const hy = head.rowFromTop * 100 + 16;
 
           // Tail on upper right or left corner of the box:
           const tailCornerLeft = tail.colFromLeft <= head.colFromLeft;
@@ -328,6 +328,12 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const headTangentX = c1x - hx;
           const headTangentY = c1y - hy;
           const headAngle = Math.atan2(headTangentY, headTangentX) * (180 / Math.PI);
+
+          // Clamp head rotation to a narrow range around its default upright pose so the
+          // head + its accessories (tongue, hat, crown, etc.) always stay tucked in the
+          // square's corner instead of swinging across the box and covering the text.
+          const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
+          const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
           return (
             <g key={`snake-${idx}`}>
@@ -489,7 +495,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
               {/* ================================================================= */}
               {/* FUNNY CARTOON SNAKE HEAD & ACCESSORIES (STATIC)                  */}
               {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headAngle - 90})`}>
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.62)`}>
                 {/* 1. Static Forked Tongue */}
                 <path
                   d="M 0 -14 L 0 -28 M 0 -28 L -6 -35 M 0 -28 L 6 -35"

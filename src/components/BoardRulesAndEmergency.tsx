@@ -19,7 +19,7 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
               <span className="p-1 bg-blue-700 text-white rounded-md shadow-2xs">
                 <Dices className="w-3.5 h-3.5" />
               </span>
-              <h3 className="text-xs sm:text-sm font-black text-blue-950 tracking-tight">
+              <h3 className="text-xs sm:text-sm font-black text-blue-950">
                 खेलका नियमहरू <span className="text-blue-700 font-semibold text-[11px] sm:text-xs">(Game Rules)</span>
               </h3>
             </div>
@@ -95,7 +95,7 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
         <div className="flex items-center justify-between px-0.5 text-[10px] sm:text-[11px] font-black">
           <div className="flex items-center gap-1.5">
             <PhoneCall className="w-3.5 h-3.5 text-yellow-300 animate-pulse" />
-            <span className="text-white font-extrabold tracking-tight">
+            <span className="text-white font-extrabold">
               आपतकालीन तथा सहायता नम्बरहरू <span className="text-yellow-200 text-[9.5px] sm:text-[10.5px]">(Emergency Helplines):</span>
             </span>
           </div>
@@ -148,7 +148,7 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
               १०४
             </div>
             <div className="flex flex-col justify-center min-w-0 leading-tight">
-              <span className="text-[11px] sm:text-xs font-black text-slate-900 truncate">
+              <span className="text-[11px] sm:text-xs font-black text-slate-900">
                 बालबालिका खोजतलास
               </span>
               <span className="text-[8.5px] sm:text-[9.5px] text-amber-800 font-bold truncate">

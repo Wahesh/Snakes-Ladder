@@ -97,7 +97,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
     <div className="w-full flex flex-col justify-between h-full bg-slate-50/95 border-r-2 border-slate-300 p-1.5 sm:p-2 space-y-1 sm:space-y-1.5 select-none">
       {/* Header Pill - Formatted into TWO lines for maximum prominence and readability */}
       <div className="w-full bg-gradient-to-r from-blue-900 via-indigo-900 to-blue-900 text-white py-1.5 sm:py-2 px-2 rounded-xl text-center shadow-xs border border-blue-950 shrink-0">
-        <h2 className="text-xs sm:text-sm font-black tracking-tight leading-tight flex flex-col items-center justify-center gap-0.5">
+        <h2 className="text-xs sm:text-sm font-black leading-tight flex flex-col items-center justify-center gap-0.5">
           <div className="flex items-center gap-1">
             <span className="text-xs sm:text-sm">🛡️</span>
             <span className="text-white">मुख्य PSEA</span>

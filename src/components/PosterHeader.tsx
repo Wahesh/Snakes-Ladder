@@ -62,15 +62,11 @@ export const PosterHeader: React.FC = () => {
       {/* 1. Generous, High-Quality Nepali Village Cartoon Panorama */}
       <div className="relative w-full h-[145px] sm:h-[175px] md:h-[195px] overflow-hidden shrink-0">
         {activeBanner ? (
-          <div className="relative w-full h-full overflow-hidden">
-            <img
-              src={activeBanner}
-              alt="Village & Children Himalayan Header"
-              className="w-full h-full object-cover object-top select-none brightness-105 contrast-105"
-              crossOrigin="anonymous"
-              referrerPolicy="no-referrer"
-            />
-          </div>
+          <img
+            src={activeBanner}
+            alt="Village & Children Himalayan Header"
+            className="absolute inset-0 w-full h-full object-cover object-top select-none brightness-105 contrast-105"
+          />
         ) : (
           <div className="relative w-full h-full">
             <VillageHeaderLandscape />
@@ -124,7 +120,7 @@ export const PosterHeader: React.FC = () => {
           <div className="relative bg-white text-emerald-950 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl shadow-md border-1.5 sm:border-2 border-emerald-500 max-w-[135px] sm:max-w-[160px] transform -rotate-1 hover:rotate-0 transition-transform duration-200">
             <div className="flex items-center gap-1 mb-0.5">
               <span className="text-[11px] sm:text-xs">🎒</span>
-              <span className="text-[9px] sm:text-[10px] font-black text-emerald-800 uppercase tracking-tight">
+              <span className="text-[9px] sm:text-[10px] font-black text-emerald-800 uppercase">
                 बाल आवाज
               </span>
             </div>
@@ -142,7 +138,7 @@ export const PosterHeader: React.FC = () => {
           <div className="relative bg-white text-blue-950 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl shadow-md border-1.5 sm:border-2 border-blue-500 max-w-[135px] sm:max-w-[160px] transform rotate-1 hover:rotate-0 transition-transform duration-200">
             <div className="flex items-center gap-1 mb-0.5">
               <span className="text-[11px] sm:text-xs">🛡️</span>
-              <span className="text-[9px] sm:text-[10px] font-black text-blue-800 uppercase tracking-tight">
+              <span className="text-[9px] sm:text-[10px] font-black text-blue-800 uppercase">
                 निःशुल्क सहायता
               </span>
             </div>

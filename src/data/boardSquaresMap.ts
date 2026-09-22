@@ -15,7 +15,7 @@ export const SQUARE_INFO: Record<number, SquareData> = {
   1: { num: 1, text: 'शुरु यहाँबाट !', isStart: true, color: '#fef9c3', borderColor: '#84cc16' },
   2: { num: 2, color: '#dbeafe' },
   3: { num: 3, color: '#fee2e2' },
-  4: { num: 4, text: 'तपाईंले मेरो शरीर मेरो आफ्नो हो भने सिक्नुभयो ।', ladderTo: 14, color: '#dcfce7', hasLadderIcon: true },
+  4: { num: 4, text: 'तपाईंले मेरो शरीर मेरो आफ्नो हो भन्न सिक्नुभयो ।', ladderTo: 14, color: '#dcfce7', hasLadderIcon: true },
   5: { num: 5, color: '#dbeafe' },
   6: { num: 6, color: '#dcfce7' },
   7: { num: 7, color: '#fee2e2' },

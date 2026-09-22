@@ -147,31 +147,31 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
         )}
       </div>
 
-      {/* 4. MAIN CONTENT: TRANSPARENT BACKGROUND SO SNAKES AND LADDERS REMAIN VISIBLE */}
+      {/* 4. MAIN CONTENT: OPAQUE READABLE CARD, ALWAYS STACKED ABOVE THE SNAKE/LADDER SVG */}
       {hasContentText && (
-        <div className="w-full h-full pt-4.5 sm:pt-5 md:pt-5.5 px-1 pb-1 flex flex-col items-center justify-center z-20 min-h-0 pointer-events-none">
+        <div className="relative w-full h-full pt-4.5 sm:pt-5 md:pt-5.5 px-1 pb-1 flex flex-col items-center justify-center z-20 min-h-0 pointer-events-none">
           <div className="w-full flex-1 flex flex-col items-center justify-center p-0.5 text-center square-text-card">
             {info.isGoal ? (
               <div className="w-full flex flex-col items-center justify-center text-center px-0.5">
-                <span className="block text-amber-950 font-black text-[10px] sm:text-[11.5px] md:text-[13px] leading-tight square-text-box">
+                <span className="block text-amber-950 font-black text-[8px] sm:text-[9px] md:text-[10px] leading-tight square-text-box">
                   बधाई छ १०० !
                 </span>
-                <span className="block text-amber-900 font-extrabold text-[8px] sm:text-[9px] md:text-[10px] leading-tight mt-0.5 square-text-box">
+                <span className="block text-amber-900 font-extrabold text-[6.5px] sm:text-[7.5px] md:text-[8.5px] leading-tight mt-0.5 square-text-box">
                   सुरक्षित समुदायको च्याम्पियन
                 </span>
               </div>
             ) : info.isStart ? (
               <div className="w-full flex flex-col items-center justify-center text-center px-0.5">
-                <span className="block font-black text-emerald-950 text-[11px] sm:text-[12.5px] md:text-[14px] leading-tight square-text-box">
+                <span className="block font-black text-emerald-950 text-[9px] sm:text-[10px] md:text-[11px] leading-tight square-text-box">
                   शुरु यहाँबाट !
                 </span>
-                <span className="block font-extrabold text-emerald-800 text-[8px] sm:text-[9px] md:text-[10px] leading-tight mt-0.5 square-text-box">
+                <span className="block font-extrabold text-emerald-800 text-[6.5px] sm:text-[7.5px] md:text-[8.5px] leading-tight mt-0.5 square-text-box">
                   START JUMP ZONE
                 </span>
               </div>
             ) : (
               <p
-                className={`font-black text-slate-950 tracking-tight text-center w-full break-words square-text-box ${getTextSizeClass(
+                className={`font-black text-slate-950 text-center w-full break-words square-text-box ${getTextSizeClass(
                   info.text || ''
                 )}`}
               >

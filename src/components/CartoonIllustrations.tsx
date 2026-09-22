@@ -759,7 +759,7 @@ interface ProtectionCartoonProps {
 
 export const ProtectionCartoonCard: React.FC<ProtectionCartoonProps> = ({ type }) => {
   return (
-    <div className="w-full h-20 sm:h-24 md:h-26 rounded-xl overflow-hidden border border-slate-200 bg-white shadow-xs">
+    <div className="w-full h-full rounded-xl overflow-hidden border border-slate-200 bg-white shadow-xs">
       <svg
         viewBox="0 0 320 110"
         className="w-full h-full"

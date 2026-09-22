@@ -1,7 +1,29 @@
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas-pro';
 import { jsPDF } from 'jspdf';
 import { TargetSizeConfig } from '../types';
-import { convertToMillimeters } from './targetSizes';
+import { convertToMillimeters, convertToInches } from './targetSizes';
+
+/**
+ * Compute the html2canvas raster scale needed so the exported image actually holds
+ * enough pixels for the target's recommended print DPI (instead of a flat multiplier
+ * that leaves tiny board-square text a blurry mess once stretched across a physical
+ * banner). Capped so the canvas doesn't blow past what browsers can safely render.
+ */
+function computeDpiAwareScale(
+  element: HTMLElement,
+  targetSize: TargetSizeConfig,
+  maxDimensionPx = 8000,
+  maxScale = 8 // stay safely under html2canvas-pro's hard 10x scale ceiling
+): number {
+  const domWidthPx = element.offsetWidth || element.getBoundingClientRect().width || 1;
+  const widthIn = convertToInches(targetSize.width, targetSize.unit);
+  const dpi = targetSize.recommendedDpi || 150;
+
+  const desiredScale = (widthIn * dpi) / domWidthPx;
+  const pixelCapScale = maxDimensionPx / domWidthPx;
+  const scale = Math.min(desiredScale, pixelCapScale, maxScale);
+  return Math.max(1, scale);
+}
 
 export interface ExportProgress {
   status: 'idle' | 'rendering' | 'generating-pdf' | 'saving' | 'completed' | 'error';
@@ -22,7 +44,7 @@ function triggerDownload(dataUrl: string, fileName: string) {
 }
 
 /**
- * Common html2canvas options with complete getComputedStyle interception for oklch
+ * Common html2canvas-pro options (html2canvas-pro natively supports oklch/lab/color-mix)
  */
 function getHtml2CanvasOptions(scale = 2) {
   return {
@@ -36,38 +58,6 @@ function getHtml2CanvasOptions(scale = 2) {
       if (!node.classList) return false;
       return node.classList.contains('no-print') || node.classList.contains('print:hidden');
     },
-    onclone: (clonedDoc: Document) => {
-      // Intercept window.getComputedStyle in the cloned document so html2canvas never sees oklch
-      const win = clonedDoc.defaultView;
-      if (win) {
-        const originalGetComputedStyle = win.getComputedStyle.bind(win);
-        win.getComputedStyle = (elt: Element, pseudoElt?: string | null) => {
-          const style = originalGetComputedStyle(elt, pseudoElt);
-          return new Proxy(style, {
-            get(target, prop, receiver) {
-              if (prop === 'getPropertyValue') {
-                return (propertyName: string) => {
-                  try {
-                    const val = target.getPropertyValue(propertyName);
-                    if (val && typeof val === 'string' && val.includes('oklch')) {
-                      return '#334155';
-                    }
-                    return val;
-                  } catch (e) {
-                    return '';
-                  }
-                };
-              }
-              const val = Reflect.get(target, prop, receiver);
-              if (val && typeof val === 'string' && val.includes('oklch')) {
-                return '#334155';
-              }
-              return val;
-            },
-          });
-        };
-      }
-    },
   };
 }
 
@@ -78,7 +68,8 @@ export async function exportPosterAsPng(
   element: HTMLElement,
   fileName = 'PSEA-Poster',
   scale = 2,
-  onProgress?: (progress: ExportProgress) => void
+  onProgress?: (progress: ExportProgress) => void,
+  targetSize?: TargetSizeConfig
 ): Promise<void> {
   try {
     onProgress?.({
@@ -87,7 +78,8 @@ export async function exportPosterAsPng(
       progressPercent: 30,
     });
 
-    const canvas = await html2canvas(element, getHtml2CanvasOptions(scale));
+    const effectiveScale = targetSize ? Math.max(scale, computeDpiAwareScale(element, targetSize)) : scale;
+    const canvas = await html2canvas(element, getHtml2CanvasOptions(effectiveScale));
 
     onProgress?.({
       status: 'saving',
@@ -128,7 +120,8 @@ export async function exportPosterAsJpeg(
   fileName = 'PSEA-Poster',
   scale = 2,
   quality = 0.95,
-  onProgress?: (progress: ExportProgress) => void
+  onProgress?: (progress: ExportProgress) => void,
+  targetSize?: TargetSizeConfig
 ): Promise<void> {
   try {
     onProgress?.({
@@ -137,7 +130,8 @@ export async function exportPosterAsJpeg(
       progressPercent: 30,
     });
 
-    const canvas = await html2canvas(element, getHtml2CanvasOptions(scale));
+    const effectiveScale = targetSize ? Math.max(scale, computeDpiAwareScale(element, targetSize)) : scale;
+    const canvas = await html2canvas(element, getHtml2CanvasOptions(effectiveScale));
 
     onProgress?.({
       status: 'saving',
@@ -189,7 +183,7 @@ export async function exportPosterAsPdf(
     const widthMm = convertToMillimeters(targetSize.width, targetSize.unit);
     const heightMm = convertToMillimeters(targetSize.height, targetSize.unit);
 
-    const scale = widthMm > 1500 ? 1.5 : 2;
+    const scale = computeDpiAwareScale(element, targetSize);
 
     const canvas = await html2canvas(element, getHtml2CanvasOptions(scale));
 

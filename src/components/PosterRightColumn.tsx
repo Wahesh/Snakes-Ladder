@@ -20,19 +20,19 @@ export const PosterRightColumn: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex flex-col justify-between h-full bg-slate-50/95 border-l-2 border-slate-300 p-1.5 sm:p-2.5 space-y-1.5 select-none">
+    <div className="w-full flex flex-col justify-between h-full bg-slate-50/95 border-l-2 border-slate-300 p-1.5 sm:p-2 space-y-1 select-none">
       {/* Header Banner */}
-      <div className="w-full bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-300 text-red-800 py-2 px-2 rounded-xl text-center shadow-xs border border-amber-400 shrink-0">
-        <h2 className="text-[11px] sm:text-xs md:text-[13px] font-black leading-tight tracking-tight flex items-center justify-center gap-1.5">
+      <div className="w-full bg-gradient-to-r from-amber-300 via-yellow-300 to-amber-300 text-red-800 py-1 px-2 rounded-xl text-center shadow-xs border border-amber-400 shrink-0">
+        <h2 className="text-[9.5px] font-black leading-tight flex items-center justify-center gap-1.5">
           <span className="text-sm">⚠️</span>
           <span>सहायताकर्मीबाट हुने यौन शोषण तथा दुर्व्यवहारका उदाहरण</span>
         </h2>
       </div>
 
       {/* 3 Protection Guidance Scenario Cards - INCREASED HEIGHT & FONT SIZE */}
-      <div className="flex-1 flex flex-col justify-between gap-2 sm:gap-2.5 py-0.5 min-h-0">
+      <div className="flex-1 flex flex-col justify-between gap-1 py-0 min-h-0">
         {/* Card 1: यौन शोषण (Sexual Exploitation) */}
-        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-2 sm:p-2.5 shadow-2xs flex-1 flex flex-col justify-between">
+        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-1.5 sm:p-2 shadow-2xs flex-1 min-h-0 flex flex-col justify-between">
           <input
             type="file"
             accept="image/*"
@@ -43,12 +43,12 @@ export const PosterRightColumn: React.FC = () => {
             className="hidden"
           />
 
-          <div className="flex items-center justify-between pb-1 border-b border-rose-200 shrink-0">
+          <div className="flex items-center justify-between border-b border-rose-200 shrink-0">
             <div className="text-center flex-1">
-              <h3 className="text-xs sm:text-sm md:text-[15px] font-black text-rose-900 leading-tight">
+              <h3 className="text-[10.5px] font-black text-rose-900 leading-tight">
                 यौन शोषण
               </h3>
-              <span className="text-[9px] sm:text-[10.5px] md:text-xs font-extrabold text-rose-700">
+              <span className="text-[8px] font-extrabold text-rose-700">
                 (Sexual Exploitation)
               </span>
             </div>
@@ -75,7 +75,7 @@ export const PosterRightColumn: React.FC = () => {
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
           {rightPanels['exploitation'] ? (
-            <div className="relative w-full aspect-[16/11] rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-1 shrink-0">
+            <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
                 src={rightPanels['exploitation']}
                 alt="यौन शोषण"
@@ -91,7 +91,7 @@ export const PosterRightColumn: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="relative group/img my-1 shrink-0">
+            <div className="relative flex-1 min-h-0 group/img my-0.5">
               <ProtectionCartoonCard type="exploitation" />
               <button
                 onClick={() => fileInputRefs.current['exploitation']?.click()}
@@ -104,7 +104,7 @@ export const PosterRightColumn: React.FC = () => {
           )}
 
           {/* Bullet Points with INCREASED font size */}
-          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-1 leading-snug">
+          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
               <span>राहत सामग्रीको बदलामा अनुचित फाइदा माग्नु ।</span>
@@ -121,7 +121,7 @@ export const PosterRightColumn: React.FC = () => {
         </div>
 
         {/* Card 2: यौन दुर्व्यवहार (Sexual Abuse) */}
-        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-2 sm:p-2.5 shadow-2xs flex-1 flex flex-col justify-between">
+        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-1.5 sm:p-2 shadow-2xs flex-1 min-h-0 flex flex-col justify-between">
           <input
             type="file"
             accept="image/*"
@@ -132,12 +132,12 @@ export const PosterRightColumn: React.FC = () => {
             className="hidden"
           />
 
-          <div className="flex items-center justify-between pb-1 border-b border-rose-200 shrink-0">
+          <div className="flex items-center justify-between border-b border-rose-200 shrink-0">
             <div className="text-center flex-1">
-              <h3 className="text-xs sm:text-sm md:text-[15px] font-black text-rose-900 leading-tight">
+              <h3 className="text-[10.5px] font-black text-rose-900 leading-tight">
                 यौन दुर्व्यवहार
               </h3>
-              <span className="text-[9px] sm:text-[10.5px] md:text-xs font-extrabold text-rose-700">
+              <span className="text-[8px] font-extrabold text-rose-700">
                 (Sexual Abuse)
               </span>
             </div>
@@ -164,7 +164,7 @@ export const PosterRightColumn: React.FC = () => {
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
           {rightPanels['abuse'] ? (
-            <div className="relative w-full aspect-[16/11] rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-1 shrink-0">
+            <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
                 src={rightPanels['abuse']}
                 alt="यौन दुर्व्यवहार"
@@ -181,7 +181,7 @@ export const PosterRightColumn: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="relative group/img my-1 shrink-0">
+            <div className="relative flex-1 min-h-0 group/img my-0.5">
               <ProtectionCartoonCard type="abuse" />
               <button
                 onClick={() => fileInputRefs.current['abuse']?.click()}
@@ -194,7 +194,7 @@ export const PosterRightColumn: React.FC = () => {
           )}
 
           {/* Bullet Points with INCREASED font size */}
-          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-1 leading-snug">
+          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
               <span>कसैको इच्छा विपरीत छुनु ।</span>
@@ -211,7 +211,7 @@ export const PosterRightColumn: React.FC = () => {
         </div>
 
         {/* Card 3: यौन उत्पीडन (Sexual Harassment) */}
-        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-2 sm:p-2.5 shadow-2xs flex-1 flex flex-col justify-between">
+        <div className="group/card relative bg-rose-50/95 border-2 border-rose-300 rounded-xl p-1.5 sm:p-2 shadow-2xs flex-1 min-h-0 flex flex-col justify-between">
           <input
             type="file"
             accept="image/*"
@@ -222,12 +222,12 @@ export const PosterRightColumn: React.FC = () => {
             className="hidden"
           />
 
-          <div className="flex items-center justify-between pb-1 border-b border-rose-200 shrink-0">
+          <div className="flex items-center justify-between border-b border-rose-200 shrink-0">
             <div className="text-center flex-1">
-              <h3 className="text-xs sm:text-sm md:text-[15px] font-black text-rose-900 leading-tight">
+              <h3 className="text-[10.5px] font-black text-rose-900 leading-tight">
                 यौन उत्पीडन
               </h3>
-              <span className="text-[9px] sm:text-[10.5px] md:text-xs font-extrabold text-rose-700">
+              <span className="text-[8px] font-extrabold text-rose-700">
                 (Sexual Harassment)
               </span>
             </div>
@@ -254,7 +254,7 @@ export const PosterRightColumn: React.FC = () => {
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
           {rightPanels['harassment'] ? (
-            <div className="relative w-full aspect-[16/11] rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-1 shrink-0">
+            <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
                 src={rightPanels['harassment']}
                 alt="यौन उत्पीडन"
@@ -271,7 +271,7 @@ export const PosterRightColumn: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="relative group/img my-1 shrink-0">
+            <div className="relative flex-1 min-h-0 group/img my-0.5">
               <ProtectionCartoonCard type="harassment" />
               <button
                 onClick={() => fileInputRefs.current['harassment']?.click()}
@@ -284,7 +284,7 @@ export const PosterRightColumn: React.FC = () => {
           )}
 
           {/* Bullet Points with INCREASED font size */}
-          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-1 leading-snug">
+          <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
               <span>अशोभनीय टिप्पणी गर्नु वा जिस्क्याउनु ।</span>
@@ -303,12 +303,12 @@ export const PosterRightColumn: React.FC = () => {
 
       {/* Callout Speech Bubble with Megaphone */}
       <div className="relative pt-1 shrink-0">
-        <div className="relative bg-white text-emerald-950 p-2 sm:p-2.5 rounded-xl border-2 sm:border-3 border-emerald-600 shadow-md text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-0.5">
+        <div className="relative bg-white text-emerald-950 px-1.5 py-1 rounded-xl border-2 sm:border-3 border-emerald-600 shadow-md text-center">
+          <div className="flex items-center justify-center gap-1.5">
             <span className="text-base sm:text-lg">📢</span>
-            <span className="text-[11px] sm:text-xs font-black text-emerald-800">सुरक्षा सल्लाह (Safety Advice)</span>
+            <span className="text-[9px] font-black text-emerald-800">सुरक्षा सल्लाह (Safety Advice)</span>
           </div>
-          <p className="text-[11px] sm:text-xs md:text-[13px] font-black leading-tight text-slate-950">
+          <p className="text-[9px] font-black leading-[1.15] text-slate-950">
             केही गलत लागेमा विश्वसनीय वयस्क वा १०९८ मा भन्नुहोस् !
           </p>
           {/* Speech bubble pointer */}
