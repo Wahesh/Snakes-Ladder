@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cbd5e1;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #64748b;
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+  --color-slate-950: #020617;
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d1fae5;
+  --color-emerald-200: #a7f3d0;
+  --color-emerald-300: #6ee7b7;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+  --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
+  --color-blue-50: #eff6ff;
+  --color-blue-100: #dbeafe;
+  --color-blue-200: #bfdbfe;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
+  --color-blue-700: #1d4ed8;
+  --color-blue-800: #1e40af;
+  --color-blue-900: #1e3a8a;
+  --color-rose-50: #fff1f2;
+  --color-rose-100: #ffe4e6;
+  --color-rose-200: #fecdd3;
+  --color-rose-300: #fda4af;
+  --color-rose-600: #e11d48;
+  --color-rose-700: #be123c;
+  --color-rose-900: #881337;
+  --color-amber-50: #fffbeb;
+  --color-amber-100: #fef3c7;
+  --color-amber-200: #fde68a;
+  --color-amber-300: #fcd34d;
+  --color-amber-400: #fbbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+  --color-amber-700: #b45309;
+  --color-amber-800: #92400e;
+  --color-amber-900: #78350f;
+  --color-amber-950: #451a03;
+  --color-red-50: #fef2f2;
+  --color-red-100: #fee2e2;
+  --color-red-200: #fecaca;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-950: #450a0a;
+  --color-teal-50: #f0fdf4;
+  --color-teal-700: #0f766e;
+  --color-teal-800: #115e59;
+}
+
+@layer base {
+  body {
+    font-family: 'Mukta', sans-serif;
+    color: #1e293b;
+    background-color: #f8fafc;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  h1, h2, h3, .heading-font {
+    font-family: 'Mukta', sans-serif;
+    font-weight: 700;
+  }
+}
+
+/* Print Specific Rules for PDF Export */
+@media print {
+  @page {
+    /* Dynamic @page sizing is injected via style tag in App */
+    margin: 0;
+  }
+
+  html, body {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  /* Hide app navigation and non-printable control panels */
+  .no-print {
+    display: none !important;
+  }
+
+  /* Force display for printable elements */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Prevent awkward page breaks */
+  .page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Keep borders and backgrounds vivid in PDF */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-shadow: none !important;
+  }
+
+  /* Scale board to fit printable canvas without overflow */
+  .printable-board-container,
+  .flex-8x8-board-wrapper,
+  .poster-board-canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .square-text-box {
+    overflow: visible !important;
+    white-space: normal !important;
+    text-shadow:
+      -1.5px -1.5px 0 #ffffff,
+       1.5px -1.5px 0 #ffffff,
+      -1.5px  1.5px 0 #ffffff,
+       1.5px  1.5px 0 #ffffff,
+       0px   -1.5px 0 #ffffff,
+       0px    1.5px 0 #ffffff,
+      -1.5px  0px   0 #ffffff,
+       1.5px  0px   0 #ffffff,
+       0px    0px   4px #ffffff,
+       0px    0px   8px #ffffff !important;
+  }
+
+  /* Crisp Print Vector Overrides - No Blurry Filters */
+  svg filter,
+  svg feDropShadow {
+    display: none !important;
+  }
+
+  svg [filter] {
+    filter: none !important;
+  }
+
+  svg {
+    shape-rendering: geometricPrecision !important;
+    text-rendering: geometricPrecision !important;
+  }
+
+  .square-text-card {
+    background-color: transparent !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Transparent Text Container & Sharp White Halo Text for Visibility over Snakes/Ladders */
+.square-text-card {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.square-text-box {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  text-shadow:
+    -1.5px -1.5px 0 #ffffff,
+     1.5px -1.5px 0 #ffffff,
+    -1.5px  1.5px 0 #ffffff,
+     1.5px  1.5px 0 #ffffff,
+     0px   -1.5px 0 #ffffff,
+     0px    1.5px 0 #ffffff,
+    -1.5px  0px   0 #ffffff,
+     1.5px  0px   0 #ffffff,
+     0px    0px   4px #ffffff,
+     0px    0px   8px #ffffff;
+}

@@ -1,0 +1,6 @@
+{
+  "name": "PSEA सर्प र सिँढी खेल",
+  "description": "सुरक्षित बालबालिका, सुरक्षित समुदाय - सहायता निःशुल्क हो (HELP IS FREE) PSEA सर्प र सिँढी खेल तथा PDF प्रिन्ट बोर्ड",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
