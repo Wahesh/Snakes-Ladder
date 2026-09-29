@@ -643,7 +643,7 @@ export const PseaMessageCartoon: React.FC<MessageCartoonProps> = ({ id }) => {
         </g>
       )}
 
-      {/* MESSAGE 6: विश्वसनीय वयस्कले मलाई सहयोग गर्न सक्छन् (Caring Teacher & Child) */}
+      {/* MESSAGE 6: विश्वसनीय व्यक्त्तिले मलाई सहयोग गर्न सक्छन् (Caring Teacher & Child) */}
       {id === 6 && (
         <g>
           <circle cx="50" cy="50" r="44" fill="#dbeafe" />

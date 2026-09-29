@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { usePosterImages } from '../context/PosterImageContext';
 import { X, Upload, RotateCcw, Image as ImageIcon, Check, Sparkles, AlertCircle } from 'lucide-react';
-import headerBannerDefault from '../assets/images/regenerated_image_1789980781678.jpg';
+import headerBannerDefault from '../assets/images/poster-defaults/header-banner.jpg';
 
 interface SlotDefinition {
   key: string;
@@ -72,7 +72,7 @@ const SLOTS: SlotDefinition[] = [
   {
     key: 'leftMessage_6',
     category: 'left',
-    nepaliTitle: 'सन्देश ६: विश्वसनीय वयस्कको सहयोग',
+    nepaliTitle: 'सन्देश ६: विश्वसनीय व्यक्त्तिको सहयोग',
     subTitle: 'सहयोग पाउने उपाय',
     aspectRatio: 'aspect-square',
     recommendedSize: '१:१ गोलाकार (लगभग २०० × २०० पिक्सेल)',

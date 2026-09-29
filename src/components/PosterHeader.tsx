@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { VillageHeaderLandscape } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Upload, RotateCcw } from 'lucide-react';
-import headerBannerImg from '../assets/images/regenerated_image_1789980781678.jpg';
+import headerBannerImg from '../assets/images/poster-defaults/header-banner.jpg';
 
 export const PosterHeader: React.FC = () => {
   const { headerBanner, updateImage, removeImage } = usePosterImages();

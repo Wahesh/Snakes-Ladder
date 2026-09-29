@@ -2,6 +2,29 @@ import React, { useRef } from 'react';
 import { PseaMessageCartoon } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Camera, RotateCcw } from 'lucide-react';
+import leftMessage1 from '../assets/images/poster-defaults/left-message-1.jpg';
+import leftMessage2 from '../assets/images/poster-defaults/left-message-2.jpg';
+import leftMessage3 from '../assets/images/poster-defaults/left-message-3.jpg';
+import leftMessage4 from '../assets/images/poster-defaults/left-message-4.jpg';
+import leftMessage5 from '../assets/images/poster-defaults/left-message-5.jpg';
+import leftMessage6 from '../assets/images/poster-defaults/left-message-6.jpg';
+import leftMessage7 from '../assets/images/poster-defaults/left-message-7.jpg';
+import leftMessage8 from '../assets/images/poster-defaults/left-message-8.webp';
+import leftMessage9 from '../assets/images/poster-defaults/left-message-9.jpg';
+import leftMessage10 from '../assets/images/poster-defaults/left-message-10.jpg';
+
+const DEFAULT_LEFT_IMAGES: Record<number, string> = {
+  1: leftMessage1,
+  2: leftMessage2,
+  3: leftMessage3,
+  4: leftMessage4,
+  5: leftMessage5,
+  6: leftMessage6,
+  7: leftMessage7,
+  8: leftMessage8,
+  9: leftMessage9,
+  10: leftMessage10,
+};
 
 interface MessageItem {
   id: number;
@@ -43,9 +66,9 @@ const PSEA_ITEMS: MessageItem[] = [
   },
   {
     id: 6,
-    line1: 'विश्वसनीय वयस्कले',
+    line1: 'विश्वसनीय व्यक्त्तिले',
     line2: 'सहयोग गर्न सक्छन् ।',
-    fullText: 'विश्वसनीय वयस्कले मलाई सहयोग गर्न सक्छन् ।',
+    fullText: 'विश्वसनीय व्यक्त्तिले मलाई सहयोग गर्न सक्छन् ।',
   },
   {
     id: 7,
@@ -117,7 +140,8 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
         }`}
       >
         {PSEA_ITEMS.map((item) => {
-          const croppedImg = leftMessages[item.id];
+          const uploadedImg = leftMessages[item.id];
+          const croppedImg = uploadedImg || DEFAULT_LEFT_IMAGES[item.id];
           return (
             <div
               key={item.id}
@@ -149,9 +173,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
                   <img
                     src={croppedImg}
                     alt={item.fullText}
-                    className="w-full h-full object-cover select-none"
-                    crossOrigin="anonymous"
-                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-cover select-none"
                   />
                 ) : (
                   <PseaMessageCartoon id={item.id} />
@@ -186,7 +208,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
                 >
                   <Camera className="w-3 h-3 text-slate-600" />
                 </button>
-                {croppedImg && (
+                {uploadedImg && (
                   <button
                     onClick={() => removeImage(`leftMessage_${item.id}`)}
                     className="p-1 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 text-[9px] font-bold cursor-pointer"

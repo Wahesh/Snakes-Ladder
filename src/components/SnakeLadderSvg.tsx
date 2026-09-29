@@ -305,8 +305,11 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const dx = tx - hx;
           const dy = ty - hy;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const dir = idx % 2 === 0 ? 1 : -1;
-          const rawCurvature = Math.min(65, Math.max(30, dist * 0.28)) * dir;
+          // Bulge direction + strength are tuned per snake (see pseaData.ts) so each
+          // body routes around nearby ladders/snakes instead of crossing through them.
+          const dir = snake.curveDir ?? (idx % 2 === 0 ? 1 : -1);
+          const curveMult = snake.curveMult ?? 1;
+          const rawCurvature = Math.min(65, Math.max(30, dist * 0.28)) * curveMult * dir;
 
           const perpX = -dy / (dist || 1);
           const perpY = dx / (dist || 1);

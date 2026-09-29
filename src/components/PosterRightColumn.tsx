@@ -2,6 +2,15 @@ import React, { useRef } from 'react';
 import { ProtectionCartoonCard } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Camera, RotateCcw } from 'lucide-react';
+import rightPanelExploitationDefault from '../assets/images/poster-defaults/right-panel-exploitation.jpg';
+import rightPanelAbuseDefault from '../assets/images/poster-defaults/right-panel-abuse.jpg';
+import rightPanelHarassmentDefault from '../assets/images/poster-defaults/right-panel-harassment.jpg';
+
+const DEFAULT_RIGHT_IMAGES: Record<string, string> = {
+  exploitation: rightPanelExploitationDefault,
+  abuse: rightPanelAbuseDefault,
+  harassment: rightPanelHarassmentDefault,
+};
 
 export const PosterRightColumn: React.FC = () => {
   const { rightPanels, updateImage, removeImage } = usePosterImages();
@@ -74,13 +83,12 @@ export const PosterRightColumn: React.FC = () => {
           </div>
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
-          {rightPanels['exploitation'] ? (
+          {rightPanels['exploitation'] || DEFAULT_RIGHT_IMAGES['exploitation'] ? (
             <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
-                src={rightPanels['exploitation']}
+                src={rightPanels['exploitation'] || DEFAULT_RIGHT_IMAGES['exploitation']}
                 alt="यौन शोषण"
-                className="w-full h-full object-cover select-none"
-                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover select-none"
               />
               <button
                 onClick={() => fileInputRefs.current['exploitation']?.click()}
@@ -163,14 +171,12 @@ export const PosterRightColumn: React.FC = () => {
           </div>
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
-          {rightPanels['abuse'] ? (
+          {rightPanels['abuse'] || DEFAULT_RIGHT_IMAGES['abuse'] ? (
             <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
-                src={rightPanels['abuse']}
+                src={rightPanels['abuse'] || DEFAULT_RIGHT_IMAGES['abuse']}
                 alt="यौन दुर्व्यवहार"
-                className="w-full h-full object-cover select-none"
-                crossOrigin="anonymous"
-                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover select-none"
               />
               <button
                 onClick={() => fileInputRefs.current['abuse']?.click()}
@@ -253,14 +259,12 @@ export const PosterRightColumn: React.FC = () => {
           </div>
 
           {/* High Quality Relevant Cartoon Story Vignette or Cropped Master Photo */}
-          {rightPanels['harassment'] ? (
+          {rightPanels['harassment'] || DEFAULT_RIGHT_IMAGES['harassment'] ? (
             <div className="relative w-full flex-1 min-h-0 rounded-lg overflow-hidden border border-rose-300 bg-white shadow-inner group/img my-0.5">
               <img
-                src={rightPanels['harassment']}
+                src={rightPanels['harassment'] || DEFAULT_RIGHT_IMAGES['harassment']}
                 alt="यौन उत्पीडन"
-                className="w-full h-full object-cover select-none"
-                crossOrigin="anonymous"
-                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover select-none"
               />
               <button
                 onClick={() => fileInputRefs.current['harassment']?.click()}
@@ -309,7 +313,7 @@ export const PosterRightColumn: React.FC = () => {
             <span className="text-[9px] font-black text-emerald-800">सुरक्षा सल्लाह (Safety Advice)</span>
           </div>
           <p className="text-[9px] font-black leading-[1.15] text-slate-950">
-            केही गलत लागेमा विश्वसनीय वयस्क वा १०९८ मा भन्नुहोस् !
+            केही गलत लागेमा विश्वसनीय व्यक्त्ति वा १०९८ मा भन्नुहोस् !
           </p>
           {/* Speech bubble pointer */}
           <div className="absolute -top-2 right-6 w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-b-5 border-b-emerald-600" />

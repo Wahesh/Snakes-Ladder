@@ -8,6 +8,11 @@ export interface Snake {
   head: number;
   tail: number;
   message: string;
+  /** Curve bulge direction (1 | -1) and strength multiplier, tuned so this snake's
+   * body routes around nearby ladders/snakes instead of crossing them. Falls back
+   * to a default alternating direction and 1x strength when omitted. */
+  curveDir?: 1 | -1;
+  curveMult?: number;
 }
 
 export interface SpecialSquare {
