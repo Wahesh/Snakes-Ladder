@@ -273,43 +273,49 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
               />
 
               {/* ================================================================= */}
-              {/* DRAMATIC FUNNY CARTOON SNAKE HEAD (STATIC, OVERSIZED)             */}
+              {/* CARTOON SNAKE HEAD WITH SNOUT (STATIC, MATCHES REFERENCE ART)     */}
               {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(1.05)`}>
-                {/* 1. Flicking Tongue */}
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.95)`}>
+                {/* 1. Solid Black Head + Snout Contour Outline (two overlapping ellipses) */}
+                <ellipse cx="-3" cy="-2" rx="13" ry="14" fill="#0f172a" />
+                <ellipse cx="8" cy="4" rx="10" ry="8" fill="#0f172a" />
+
+                {/* 2. Skull + Snout Fill */}
+                <ellipse cx="-3" cy="-2" rx="11" ry="12" fill={theme.bodyColor} />
+                <ellipse cx="8" cy="4" rx="8.3" ry="6.3" fill={theme.bodyColor} />
+
+                {/* 3. Cream Chin/Snout Underside */}
+                <ellipse cx="7" cy="8" rx="7" ry="4.8" fill={BELLY_COLOR} />
+
+                {/* 4. Nostril Dots */}
+                <circle cx="14.5" cy="1" r="1" fill="#0f172a" />
+                <circle cx="15" cy="4" r="1" fill="#0f172a" />
+
+                {/* 5. Content Closed-Mouth Smile */}
+                <path d="M 0 7 Q 7 11.5 13 4.5" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
+
+                {/* 6. Forked Tongue Flicking from the Mouth Corner */}
                 <path
-                  d="M 6 8 L 15 13 M 15 13 L 21 9 M 15 13 L 19 19"
+                  d="M 13 5 L 19 9 M 19 9 L 23.5 6.5 M 19 9 L 21 13.5"
                   stroke={theme.tongueColor}
-                  strokeWidth="2.8"
+                  strokeWidth="2.4"
                   fill="none"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
 
-                {/* 2. Solid Black Head Contour Outline */}
-                <ellipse cx="0" cy="0" rx="17" ry="18" fill="#0f172a" />
+                {/* 7. Big Round Friendly Eyes */}
+                <ellipse cx="-9" cy="-7" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
+                <circle cx="-8.4" cy="-6.5" r="3.4" fill="#0f172a" />
+                <circle cx="-10" cy="-8.5" r="1.1" fill="#ffffff" />
 
-                {/* 3. Main Head Shape */}
-                <ellipse cx="0" cy="0.5" rx="15" ry="16" fill={theme.bodyColor} />
-                <ellipse cx="0" cy="6.5" rx="11.5" ry="7.5" fill={BELLY_COLOR} opacity="0.5" />
+                <ellipse cx="1" cy="-9" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
+                <circle cx="1.6" cy="-8.5" r="3.4" fill="#0f172a" />
+                <circle cx="-0.2" cy="-10.5" r="1.1" fill="#ffffff" />
 
-                {/* 4. Big Dramatic Open Grin */}
-                <path d="M -9 4 Q 0 16 10 2 Q 5 9 0 8 Q -5 9 -9 4 Z" fill="#7f1d1d" stroke="#0f172a" strokeWidth="1.4" />
-                <path d="M -6.5 4.5 L -5.5 8 L -4.5 4.5 Z" fill="#ffffff" />
-                <path d="M 6.5 3 L 5.8 6.3 L 5 2.8 Z" fill="#ffffff" />
-
-                {/* 5. Big Round Expressive Eyes */}
-                <ellipse cx="-7" cy="-5" rx="6.2" ry="7" fill="#ffffff" stroke="#0f172a" strokeWidth="1.5" />
-                <circle cx="-6.4" cy="-4.5" r="4" fill="#0f172a" />
-                <circle cx="-8.2" cy="-6.6" r="1.3" fill="#ffffff" />
-
-                <ellipse cx="7" cy="-5" rx="6.2" ry="7" fill="#ffffff" stroke="#0f172a" strokeWidth="1.5" />
-                <circle cx="7.6" cy="-4.5" r="4" fill="#0f172a" />
-                <circle cx="5.8" cy="-6.6" r="1.3" fill="#ffffff" />
-
-                {/* 6. Raised, Dramatic Eyebrows */}
-                <path d="M -12.5 -12 Q -7 -16.5 -1.5 -12.5" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
-                <path d="M 1.5 -12.5 Q 7 -16.5 12.5 -12" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                {/* 8. Subtle Brow Lines */}
+                <path d="M -14 -12.5 Q -9 -15 -4 -13" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
+                <path d="M -3.5 -14.5 Q 1 -17 5.5 -15" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
               </g>
             </g>
           );
