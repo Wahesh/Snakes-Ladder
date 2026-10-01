@@ -216,9 +216,10 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
           const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
-          // Pointy tail tip: a tapered triangle continuing the tangent at the curve's
-          // end (strokes can't taper on their own, so this is a separate shape glued
-          // onto the butt-capped end of the body).
+          // Pointy tail tip: a slender tapered triangle continuing the tangent at the
+          // curve's end (strokes can't taper on their own, so this is a separate shape
+          // glued onto the butt-capped end of the body). Clamped to the tail square's
+          // own bounds so the point never pokes into a neighboring square.
           const tailTangentX = tx - c2x;
           const tailTangentY = ty - c2y;
           const tailTangentLen = Math.sqrt(tailTangentX * tailTangentX + tailTangentY * tailTangentY) || 1;
@@ -227,13 +228,18 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const tailPerpX = -tailDirY;
           const tailPerpY = tailDirX;
 
+          const tailSquareMinX = tail.colFromLeft * 100 + 4;
+          const tailSquareMaxX = tail.colFromLeft * 100 + 96;
+          const tailSquareMinY = tail.rowFromTop * 100 + 4;
+          const tailSquareMaxY = tail.rowFromTop * 100 + 96;
+
           const tailTip = (halfWidth: number, tipLength: number) => {
             const baseLx = tx + tailPerpX * halfWidth;
             const baseLy = ty + tailPerpY * halfWidth;
             const baseRx = tx - tailPerpX * halfWidth;
             const baseRy = ty - tailPerpY * halfWidth;
-            const tipX = tx + tailDirX * tipLength;
-            const tipY = ty + tailDirY * tipLength;
+            const tipX = Math.max(tailSquareMinX, Math.min(tailSquareMaxX, tx + tailDirX * tipLength));
+            const tipY = Math.max(tailSquareMinY, Math.min(tailSquareMaxY, ty + tailDirY * tipLength));
             return `M ${baseLx} ${baseLy} L ${tipX} ${tipY} L ${baseRx} ${baseRy} Z`;
           };
 
@@ -241,11 +247,11 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
             <g key={`snake-${idx}`}>
               {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
               <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="butt" />
-              <path d={tailTip(11.5, 26)} fill="#0f172a" />
+              <path d={tailTip(7.5, 17)} fill="#0f172a" />
 
               {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel) */}
               <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="butt" />
-              <path d={tailTip(9, 21)} fill={theme.bodyColor} />
+              <path d={tailTip(5.5, 14)} fill={theme.bodyColor} />
 
               {/* Layer 3: Dark Oval Spots (wider than the belly stripe, so they only show on the outer edges) */}
               <path
@@ -273,50 +279,43 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
               />
 
               {/* ================================================================= */}
-              {/* CARTOON SNAKE HEAD WITH SNOUT (STATIC, MATCHES REFERENCE ART)     */}
+              {/* ROUND, OVERSIZED, CUTE CARTOON SNAKE HEAD (STATIC)                */}
               {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(1)`}>
-                {/* 1. Single-Path Head + Snout Silhouette (smooth, no seams) */}
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(1.25)`}>
+                {/* 1. Round Head Outline + Fill */}
+                <circle cx="0" cy="0" r="16" fill="#0f172a" />
+                <circle cx="0" cy="0.5" r="14" fill={theme.bodyColor} />
+
+                {/* 2. Cream Chin Patch (where the open smiling mouth sits) */}
+                <ellipse cx="0" cy="7" rx="9.5" ry="5.5" fill={BELLY_COLOR} />
+
+                {/* 3. Small Button Nostrils */}
+                <circle cx="-1.6" cy="0.5" r="0.8" fill="#0f172a" />
+                <circle cx="1.6" cy="0.5" r="0.8" fill="#0f172a" />
+
+                {/* 4. Open Smiling Mouth */}
                 <path
-                  d="M 0 -15 C 8 -16, 14 -12, 16 -6 C 17.5 -2, 17.5 3, 14 7 C 11 10.5, 6 11.5, 1 11 C -4 10.5, -8 9, -11 5.5 C -14.5 1.5, -15 -5, -12 -10 C -9.5 -14, -4 -16, 0 -15 Z"
-                  fill="#0f172a"
-                />
-                <path
-                  d="M 0 -13.3 C 7 -14.2, 12.4 -10.6, 14.1 -5.3 C 15.4 -1.8, 15.4 2.6, 12.4 6.2 C 9.7 9.3, 5.3 10.2, 0.9 9.7 C -3.5 9.3, -7 8, -9.7 4.9 C -12.9 1.3, -13.3 -4.4, -10.6 -8.8 C -8.4 -12.4, -3.5 -14.2, 0 -13.3 Z"
-                  fill={theme.bodyColor}
+                  d="M -7.5 4 Q 0 14 7.5 4 Q 3.5 8.5 0 8.5 Q -3.5 8.5 -7.5 4 Z"
+                  fill="#7f1d1d"
+                  stroke="#0f172a"
+                  strokeWidth="1.3"
                 />
 
-                {/* 2. Cream Chin/Snout Underside */}
-                <ellipse cx="5" cy="7.5" rx="7.5" ry="4.2" fill={BELLY_COLOR} />
-
-                {/* 3. Nostril Dots */}
-                <circle cx="12.5" cy="-2.5" r="0.9" fill="#0f172a" />
-                <circle cx="13" cy="0.5" r="0.9" fill="#0f172a" />
-
-                {/* 4. Content Closed-Mouth Smile */}
-                <path d="M 0 7.5 Q 6 10.5 11.5 4" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
-
-                {/* 5. Forked Tongue Flicking from the Mouth Corner */}
-                <path
-                  d="M 12 5 Q 17 6.5 19 4.5 M 17 6.5 Q 18.5 9 20.5 10"
-                  stroke={theme.tongueColor}
-                  strokeWidth="1.6"
-                  fill="none"
-                  strokeLinecap="round"
-                />
+                {/* 5. Small Tongue Peeking Out */}
+                <ellipse cx="0" cy="9.5" rx="2.1" ry="2.8" fill={theme.tongueColor} />
 
                 {/* 6. Big Round Friendly Eyes */}
-                <ellipse cx="-7" cy="-6" rx="4.6" ry="5.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
-                <circle cx="-6.5" cy="-5.5" r="2.8" fill="#0f172a" />
-                <circle cx="-7.8" cy="-7.2" r="0.9" fill="#ffffff" />
+                <ellipse cx="-6.5" cy="-5" rx="5" ry="5.6" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
+                <circle cx="-6" cy="-4.5" r="3.2" fill="#0f172a" />
+                <circle cx="-7.3" cy="-6.3" r="0.9" fill="#ffffff" />
 
-                <ellipse cx="2.5" cy="-8" rx="4.6" ry="5.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
-                <circle cx="3" cy="-7.5" r="2.8" fill="#0f172a" />
-                <circle cx="1.7" cy="-9.2" r="0.9" fill="#ffffff" />
+                <ellipse cx="6.5" cy="-5" rx="5" ry="5.6" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
+                <circle cx="7" cy="-4.5" r="3.2" fill="#0f172a" />
+                <circle cx="5.7" cy="-6.3" r="0.9" fill="#ffffff" />
 
                 {/* 7. Subtle Brow Lines */}
-                <path d="M -11 -10.5 Q -7 -12.5 -3 -11" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
-                <path d="M -2 -12.5 Q 2 -14.5 6 -12.5" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
+                <path d="M -11 -10.5 Q -6.5 -13 -2 -11" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
+                <path d="M 2 -11 Q 6.5 -13 11 -10.5" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
               </g>
             </g>
           );
