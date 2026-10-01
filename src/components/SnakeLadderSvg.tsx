@@ -8,6 +8,30 @@ interface SnakeLadderSvgProps {
   opacity?: number;
 }
 
+// Cubic bezier point/tangent sampling, used to build a gradually-narrowing
+// cone for the tail tip (a stroke can't taper on its own, so the final
+// stretch of the curve is instead drawn as a tapered polygon sampled along
+// the real curve geometry).
+function cubicPoint(
+  p0x: number, p0y: number, p1x: number, p1y: number,
+  p2x: number, p2y: number, p3x: number, p3y: number, t: number
+) {
+  const mt = 1 - t;
+  const x = mt * mt * mt * p0x + 3 * mt * mt * t * p1x + 3 * mt * t * t * p2x + t * t * t * p3x;
+  const y = mt * mt * mt * p0y + 3 * mt * mt * t * p1y + 3 * mt * t * t * p2y + t * t * t * p3y;
+  return { x, y };
+}
+
+function cubicTangent(
+  p0x: number, p0y: number, p1x: number, p1y: number,
+  p2x: number, p2y: number, p3x: number, p3y: number, t: number
+) {
+  const mt = 1 - t;
+  const x = 3 * mt * mt * (p1x - p0x) + 6 * mt * t * (p2x - p1x) + 3 * t * t * (p3x - p2x);
+  const y = 3 * mt * mt * (p1y - p0y) + 6 * mt * t * (p2y - p1y) + 3 * t * t * (p3y - p2y);
+  return { x, y };
+}
+
 // Vector snake skin, redrawn to match a reference sticker: thick glossy tube,
 // cream belly stripe with rib ticks down the center, dark oval spots on the
 // outer edges, bold black outline. The body shape still follows the tuned
@@ -203,8 +227,6 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           c2x = Math.max(25, Math.min(975, c2x));
           c2y = Math.max(25, Math.min(975, c2y));
 
-          const pathD = `M ${hx} ${hy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
-
           // Direction tangent at head for angle
           const headTangentX = c1x - hx;
           const headTangentY = c1y - hy;
@@ -216,42 +238,65 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
           const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
-          // Pointy tail tip: a slender tapered triangle continuing the tangent at the
-          // curve's end (strokes can't taper on their own, so this is a separate shape
-          // glued onto the butt-capped end of the body). Clamped to the tail square's
-          // own bounds so the point never pokes into a neighboring square.
-          const tailTangentX = tx - c2x;
-          const tailTangentY = ty - c2y;
-          const tailTangentLen = Math.sqrt(tailTangentX * tailTangentX + tailTangentY * tailTangentY) || 1;
-          const tailDirX = tailTangentX / tailTangentLen;
-          const tailDirY = tailTangentY / tailTangentLen;
-          const tailPerpX = -tailDirY;
-          const tailPerpY = tailDirX;
+          // Conical tail: the last stretch of the curve (from tSplit to the tail point,
+          // which is already safely inset inside the tail square) is subdivided out via
+          // De Casteljau's algorithm and re-rendered as a tapered polygon sampled along
+          // the real curve, so the body gradually narrows into a sharp point instead of
+          // an abrupt triangle glued onto a constant-width tube.
+          const tSplit = 0.72;
+          const Ax = hx + (c1x - hx) * tSplit;
+          const Ay = hy + (c1y - hy) * tSplit;
+          const Bx = c1x + (c2x - c1x) * tSplit;
+          const By = c1y + (c2y - c1y) * tSplit;
+          const Cx = c2x + (tx - c2x) * tSplit;
+          const Cy = c2y + (ty - c2y) * tSplit;
+          const Dx = Ax + (Bx - Ax) * tSplit;
+          const Dy = Ay + (By - Ay) * tSplit;
+          const Ex = Bx + (Cx - Bx) * tSplit;
+          const Ey = By + (Cy - By) * tSplit;
+          const Fx = Dx + (Ex - Dx) * tSplit;
+          const Fy = Dy + (Ey - Dy) * tSplit;
 
-          const tailSquareMinX = tail.colFromLeft * 100 + 4;
-          const tailSquareMaxX = tail.colFromLeft * 100 + 96;
-          const tailSquareMinY = tail.rowFromTop * 100 + 4;
-          const tailSquareMaxY = tail.rowFromTop * 100 + 96;
+          // Main body path now stops at F (tSplit along the curve); the taper polygon
+          // below picks up from exactly that point, so there's no seam.
+          const pathD = `M ${hx} ${hy} C ${Ax} ${Ay}, ${Dx} ${Dy}, ${Fx} ${Fy}`;
 
-          const tailTip = (halfWidth: number, tipLength: number) => {
-            const baseLx = tx + tailPerpX * halfWidth;
-            const baseLy = ty + tailPerpY * halfWidth;
-            const baseRx = tx - tailPerpX * halfWidth;
-            const baseRy = ty - tailPerpY * halfWidth;
-            const tipX = Math.max(tailSquareMinX, Math.min(tailSquareMaxX, tx + tailDirX * tipLength));
-            const tipY = Math.max(tailSquareMinY, Math.min(tailSquareMaxY, ty + tailDirY * tipLength));
-            return `M ${baseLx} ${baseLy} L ${tipX} ${tipY} L ${baseRx} ${baseRy} Z`;
+          const TAPER_STEPS = 8;
+          const BODY_HALF_WIDTH = 9;
+          const OUTLINE_MARGIN = 2.5;
+          const taperSamples = Array.from({ length: TAPER_STEPS + 1 }, (_, i) => {
+            const t = i / TAPER_STEPS;
+            const pt = cubicPoint(Fx, Fy, Ex, Ey, Cx, Cy, tx, ty, t);
+            const tan = cubicTangent(Fx, Fy, Ex, Ey, Cx, Cy, tx, ty, t);
+            const tanLen = Math.sqrt(tan.x * tan.x + tan.y * tan.y) || 1;
+            // Eased taper (slower to start, narrowing faster near the tip) for a more
+            // natural conical profile than a straight linear wedge.
+            const ease = Math.pow(1 - t, 1.4);
+            return { x: pt.x, y: pt.y, px: -tan.y / tanLen, py: tan.x / tanLen, ease };
+          });
+
+          const buildTaperPolygon = (extraHalfWidth: number) => {
+            const left = taperSamples.map(
+              (p) => `${p.x + p.px * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)} ${p.y + p.py * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)}`
+            );
+            const right = taperSamples
+              .slice()
+              .reverse()
+              .map(
+                (p) => `${p.x - p.px * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)} ${p.y - p.py * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)}`
+              );
+            return `M ${left.join(' L ')} L ${right.join(' L ')} Z`;
           };
 
           return (
             <g key={`snake-${idx}`}>
               {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
               <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="butt" />
-              <path d={tailTip(7.5, 17)} fill="#0f172a" />
+              <path d={buildTaperPolygon(OUTLINE_MARGIN)} fill="#0f172a" />
 
-              {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel) */}
+              {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel), tapering to a slender conical point */}
               <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="butt" />
-              <path d={tailTip(5.5, 14)} fill={theme.bodyColor} />
+              <path d={buildTaperPolygon(0)} fill={theme.bodyColor} />
 
               {/* Layer 3: Dark Oval Spots (wider than the belly stripe, so they only show on the outer edges) */}
               <path
