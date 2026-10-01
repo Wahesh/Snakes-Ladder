@@ -238,90 +238,94 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
           const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
-          // Conical tail: the last stretch of the curve (from tSplit to the tail point,
-          // which is already safely inset inside the tail square) is subdivided out via
-          // De Casteljau's algorithm and re-rendered as a tapered polygon sampled along
-          // the real curve, so the body gradually narrows into a sharp point instead of
-          // an abrupt triangle glued onto a constant-width tube.
-          const tSplit = 0.72;
-          const Ax = hx + (c1x - hx) * tSplit;
-          const Ay = hy + (c1y - hy) * tSplit;
-          const Bx = c1x + (c2x - c1x) * tSplit;
-          const By = c1y + (c2y - c1y) * tSplit;
-          const Cx = c2x + (tx - c2x) * tSplit;
-          const Cy = c2y + (ty - c2y) * tSplit;
-          const Dx = Ax + (Bx - Ax) * tSplit;
-          const Dy = Ay + (By - Ay) * tSplit;
-          const Ex = Bx + (Cx - Bx) * tSplit;
-          const Ey = By + (Cy - By) * tSplit;
-          const Fx = Dx + (Ex - Dx) * tSplit;
-          const Fy = Dy + (Ey - Dy) * tSplit;
-
-          // Main body path now stops at F (tSplit along the curve); the taper polygon
-          // below picks up from exactly that point, so there's no seam.
-          const pathD = `M ${hx} ${hy} C ${Ax} ${Ay}, ${Dx} ${Dy}, ${Fx} ${Fy}`;
-
-          const TAPER_STEPS = 8;
+          // Whole-body silhouette: the curve is sampled start-to-end and offset by a
+          // per-sample half-width (constant for most of the body, then eased down to
+          // ~0 over the last stretch) to build one continuous tapered polygon. Body,
+          // belly and outline all reuse this same sampling (at their own base widths)
+          // so every texture layer narrows together and reaches all the way to the tip,
+          // instead of a constant-width stroke that stops dead with a separate tip glued on.
           const BODY_HALF_WIDTH = 9;
+          const BELLY_HALF_WIDTH = 4.25;
           const OUTLINE_MARGIN = 2.5;
-          const taperSamples = Array.from({ length: TAPER_STEPS + 1 }, (_, i) => {
-            const t = i / TAPER_STEPS;
-            const pt = cubicPoint(Fx, Fy, Ex, Ey, Cx, Cy, tx, ty, t);
-            const tan = cubicTangent(Fx, Fy, Ex, Ey, Cx, Cy, tx, ty, t);
+          const TAPER_START = 0.72;
+          const SAMPLE_STEPS = 32;
+
+          const curveSamples = Array.from({ length: SAMPLE_STEPS + 1 }, (_, i) => {
+            const t = i / SAMPLE_STEPS;
+            const pt = cubicPoint(hx, hy, c1x, c1y, c2x, c2y, tx, ty, t);
+            const tan = cubicTangent(hx, hy, c1x, c1y, c2x, c2y, tx, ty, t);
             const tanLen = Math.sqrt(tan.x * tan.x + tan.y * tan.y) || 1;
-            // Eased taper (slower to start, narrowing faster near the tip) for a more
-            // natural conical profile than a straight linear wedge.
-            const ease = Math.pow(1 - t, 1.4);
-            return { x: pt.x, y: pt.y, px: -tan.y / tanLen, py: tan.x / tanLen, ease };
+            let widthFactor = 1;
+            if (t > TAPER_START) {
+              const localT = (t - TAPER_START) / (1 - TAPER_START);
+              // Eased taper (slower to start, narrowing faster near the tip) for a more
+              // natural conical profile than a straight linear wedge.
+              widthFactor = Math.pow(1 - localT, 1.4);
+            }
+            return { x: pt.x, y: pt.y, px: -tan.y / tanLen, py: tan.x / tanLen, widthFactor };
           });
 
-          const buildTaperPolygon = (extraHalfWidth: number) => {
-            const left = taperSamples.map(
-              (p) => `${p.x + p.px * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)} ${p.y + p.py * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)}`
+          const buildTaperedPolygon = (baseHalfWidth: number, extraHalfWidth: number) => {
+            const left = curveSamples.map(
+              (p) => `${p.x + p.px * (baseHalfWidth * p.widthFactor + extraHalfWidth)} ${p.y + p.py * (baseHalfWidth * p.widthFactor + extraHalfWidth)}`
             );
-            const right = taperSamples
+            const right = curveSamples
               .slice()
               .reverse()
               .map(
-                (p) => `${p.x - p.px * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)} ${p.y - p.py * (BODY_HALF_WIDTH * p.ease + extraHalfWidth)}`
+                (p) => `${p.x - p.px * (baseHalfWidth * p.widthFactor + extraHalfWidth)} ${p.y - p.py * (baseHalfWidth * p.widthFactor + extraHalfWidth)}`
               );
             return `M ${left.join(' L ')} L ${right.join(' L ')} Z`;
           };
 
+          const fullPathD = `M ${hx} ${hy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
+          const bodyClipId = `snake-body-clip-${idx}`;
+          const bellyClipId = `snake-belly-clip-${idx}`;
+
           return (
             <g key={`snake-${idx}`}>
-              {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
-              <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="butt" />
-              <path d={buildTaperPolygon(OUTLINE_MARGIN)} fill="#0f172a" />
+              <clipPath id={bodyClipId}>
+                <path d={buildTaperedPolygon(BODY_HALF_WIDTH, 0)} />
+              </clipPath>
+              <clipPath id={bellyClipId}>
+                <path d={buildTaperedPolygon(BELLY_HALF_WIDTH, 0)} />
+              </clipPath>
 
-              {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel), tapering to a slender conical point */}
-              <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="butt" />
-              <path d={buildTaperPolygon(0)} fill={theme.bodyColor} />
+              {/* Layer 1: Solid Dark Comic Contour Outline, tapering to a slender conical point */}
+              <path d={buildTaperedPolygon(BODY_HALF_WIDTH, OUTLINE_MARGIN)} fill="#0f172a" />
 
-              {/* Layer 3: Dark Oval Spots (wider than the belly stripe, so they only show on the outer edges) */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke={theme.spotsColor}
-                strokeWidth="15"
-                strokeLinecap="butt"
-                strokeDasharray="6, 11"
-                strokeDashoffset="3"
-                opacity="0.85"
-              />
+              {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel) */}
+              <path d={buildTaperedPolygon(BODY_HALF_WIDTH, 0)} fill={`url(#body-grad-${theme.id})`} />
 
-              {/* Layer 4: Cream Belly Stripe (centered, narrower, covers the middle of the tube) */}
-              <path d={pathD} fill="none" stroke={BELLY_COLOR} strokeWidth="8.5" strokeLinecap="butt" />
+              {/* Layer 3: Dark Oval Spots, clipped to the tapering tube so they shrink
+                  naturally all the way to the tip instead of stopping abruptly */}
+              <g clipPath={`url(#${bodyClipId})`}>
+                <path
+                  d={fullPathD}
+                  fill="none"
+                  stroke={theme.spotsColor}
+                  strokeWidth="15"
+                  strokeLinecap="butt"
+                  strokeDasharray="6, 11"
+                  strokeDashoffset="3"
+                  opacity="0.85"
+                />
+              </g>
 
-              {/* Layer 5: Belly Rib Ticks */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke={RIB_COLOR}
-                strokeWidth="8.5"
-                strokeLinecap="butt"
-                strokeDasharray="1.6, 7"
-              />
+              {/* Layer 4: Cream Belly Stripe, tapering in lockstep with the body */}
+              <path d={buildTaperedPolygon(BELLY_HALF_WIDTH, 0)} fill={BELLY_COLOR} />
+
+              {/* Layer 5: Belly Rib Ticks, clipped to the tapering belly stripe */}
+              <g clipPath={`url(#${bellyClipId})`}>
+                <path
+                  d={fullPathD}
+                  fill="none"
+                  stroke={RIB_COLOR}
+                  strokeWidth="8.5"
+                  strokeLinecap="butt"
+                  strokeDasharray="1.6, 7"
+                />
+              </g>
 
               {/* ================================================================= */}
               {/* ROUND, OVERSIZED, CUTE CARTOON SNAKE HEAD (STATIC)                */}
