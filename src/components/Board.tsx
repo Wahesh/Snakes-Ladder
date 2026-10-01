@@ -43,7 +43,7 @@ export const Board: React.FC<BoardProps> = ({
         <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-300 px-3 py-1.5 rounded-xl">
           <ShieldCheck className="w-5 h-5 text-emerald-700 shrink-0" />
           <span className="text-xs sm:text-sm font-semibold text-emerald-900">
-            "केही गलत लागेमा विश्वसनीय वयस्कलाई भन्नुहोस्"
+            "केही गलत लागेमा विश्वसनीय व्यक्त्तिलाई भन्नुहोस्"
           </span>
         </div>
       </div>

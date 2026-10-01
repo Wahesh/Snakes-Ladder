@@ -2,6 +2,29 @@ import React, { useRef } from 'react';
 import { PseaMessageCartoon } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Camera, RotateCcw } from 'lucide-react';
+import leftMessage1 from '../assets/images/poster-defaults/left-message-1.jpg';
+import leftMessage2 from '../assets/images/poster-defaults/left-message-2.jpg';
+import leftMessage3 from '../assets/images/poster-defaults/left-message-3.jpg';
+import leftMessage4 from '../assets/images/poster-defaults/left-message-4.jpg';
+import leftMessage5 from '../assets/images/poster-defaults/left-message-5.jpg';
+import leftMessage6 from '../assets/images/poster-defaults/left-message-6.jpg';
+import leftMessage7 from '../assets/images/poster-defaults/left-message-7.jpg';
+import leftMessage8 from '../assets/images/poster-defaults/left-message-8.webp';
+import leftMessage9 from '../assets/images/poster-defaults/left-message-9.jpg';
+import leftMessage10 from '../assets/images/poster-defaults/left-message-10.jpg';
+
+const DEFAULT_LEFT_IMAGES: Record<number, string> = {
+  1: leftMessage1,
+  2: leftMessage2,
+  3: leftMessage3,
+  4: leftMessage4,
+  5: leftMessage5,
+  6: leftMessage6,
+  7: leftMessage7,
+  8: leftMessage8,
+  9: leftMessage9,
+  10: leftMessage10,
+};
 
 interface MessageItem {
   id: number;
@@ -14,62 +37,62 @@ const PSEA_ITEMS: MessageItem[] = [
   {
     id: 1,
     line1: 'मेरो शरीर',
-    line2: 'मेरो आफ्नाे हो ।',
-    fullText: 'मेरो शरीर मेरो आफ्नाे हो ।',
+    line2: 'मेरो आफ्नाे हो ।',
+    fullText: 'मेरो शरीर मेरो आफ्नाे हो ।',
   },
   {
     id: 2,
     line1: 'म सुरक्षित रहने',
-    line2: 'अधिकार राख्छु ।',
-    fullText: 'म सुरक्षित रहने अधिकार राख्छु ।',
+    line2: 'अधिकार राख्छु ।',
+    fullText: 'म सुरक्षित रहने अधिकार राख्छु ।',
   },
   {
     id: 3,
     line1: 'सहायता र सेवा',
-    line2: 'निःशुल्क हुन्छन् ।',
-    fullText: 'सहायता र सेवा निःशुल्क हुन्छन् ।',
+    line2: 'निःशुल्क हुन्छन् ।',
+    fullText: 'सहायता र सेवा निःशुल्क हुन्छन् ।',
   },
   {
     id: 4,
     line1: 'सहयोगको बदलामा कसैले पनि',
-    line2: 'कुनै फाइदा माग्न मिल्दैन ।',
-    fullText: 'सहयोगको बदलामा कसैले पनि कुनै व्यक्तिगत वा यौनजन्य फाइदा माग्न मिल्दैन ।',
+    line2: 'कुनै फाइदा माग्न मिल्दैन ।',
+    fullText: 'सहयोगको बदलामा कसैले पनि कुनै व्यक्तिगत वा यौनजन्य फाइदा माग्न मिल्दैन ।',
   },
   {
     id: 5,
     line1: 'मलाई मन नपरे',
-    line2: '"हुँदैन" भन्न सक्छु ।',
-    fullText: 'मलाई मन नपरे "हुँदैन" भन्न सक्छु ।',
+    line2: '"हुँदैन" भन्न सक्छु ।',
+    fullText: 'मलाई मन नपरे "हुँदैन" भन्न सक्छु ।',
   },
   {
     id: 6,
-    line1: 'विश्वसनीय वयस्कले',
-    line2: 'सहयोग गर्न सक्छन् ।',
-    fullText: 'विश्वसनीय वयस्कले मलाई सहयोग गर्न सक्छन् ।',
+    line1: 'विश्वसनीय व्यक्त्तिले',
+    line2: 'सहयोग गर्न सक्छन् ।',
+    fullText: 'विश्वसनीय व्यक्त्तिले मलाई सहयोग गर्न सक्छन् ।',
   },
   {
     id: 7,
     line1: 'आवाज उठाउनु र बोल्नु',
-    line2: 'साहसिक काम हो ।',
-    fullText: 'बोल्नु साहसिक काम हो ।',
+    line2: 'साहसिक काम हो ।',
+    fullText: 'बोल्नु साहसिक काम हो ।',
   },
   {
     id: 8,
     line1: 'सबै बालबालिकाले',
-    line2: 'सम्मान पाउनुपर्छ ।',
-    fullText: 'सबै बालबालिकाले सम्मान पाउनुपर्छ ।',
+    line2: 'सम्मान पाउनुपर्छ ।',
+    fullText: 'सबै बालबालिकाले सम्मान पाउनुपर्छ ।',
   },
   {
     id: 9,
     line1: 'केटा र केटी दुवैलाई',
-    line2: 'समान सुरक्षाको अधिकार छ ।',
-    fullText: 'केटा र केटी दुवैलाई समान सुरक्षा पाउने अधिकार छ ।',
+    line2: 'समान सुरक्षाको अधिकार छ ।',
+    fullText: 'केटा र केटी दुवैलाई समान सुरक्षा पाउने अधिकार छ ।',
   },
   {
     id: 10,
     line1: 'घटनाको रिपोर्टिङले सबैलाई',
-    line2: 'सुरक्षित राख्न मद्दत गर्छ ।',
-    fullText: 'रिपोर्टिङले सबैलाई सुरक्षित राख्न मद्दत गर्छ ।',
+    line2: 'सुरक्षित राख्न मद्दत गर्छ ।',
+    fullText: 'रिपोर्टिङले सबैलाई सुरक्षित राख्न मद्दत गर्छ ।',
   },
 ];
 
@@ -97,7 +120,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
     <div className="w-full flex flex-col justify-between h-full bg-slate-50/95 border-r-2 border-slate-300 p-1.5 sm:p-2 space-y-1 sm:space-y-1.5 select-none">
       {/* Header Pill - Formatted into TWO lines for maximum prominence and readability */}
       <div className="w-full bg-gradient-to-r from-blue-900 via-indigo-900 to-blue-900 text-white py-1.5 sm:py-2 px-2 rounded-xl text-center shadow-xs border border-blue-950 shrink-0">
-        <h2 className="text-xs sm:text-sm font-black tracking-tight leading-tight flex flex-col items-center justify-center gap-0.5">
+        <h2 className="text-xs sm:text-sm font-black leading-tight flex flex-col items-center justify-center gap-0.5">
           <div className="flex items-center gap-1">
             <span className="text-xs sm:text-sm">🛡️</span>
             <span className="text-white">मुख्य PSEA</span>
@@ -117,7 +140,8 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
         }`}
       >
         {PSEA_ITEMS.map((item) => {
-          const croppedImg = leftMessages[item.id];
+          const uploadedImg = leftMessages[item.id];
+          const croppedImg = uploadedImg || DEFAULT_LEFT_IMAGES[item.id];
           return (
             <div
               key={item.id}
@@ -149,9 +173,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
                   <img
                     src={croppedImg}
                     alt={item.fullText}
-                    className="w-full h-full object-cover select-none"
-                    crossOrigin="anonymous"
-                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-cover select-none"
                   />
                 ) : (
                   <PseaMessageCartoon id={item.id} />
@@ -186,7 +208,7 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
                 >
                   <Camera className="w-3 h-3 text-slate-600" />
                 </button>
-                {croppedImg && (
+                {uploadedImg && (
                   <button
                     onClick={() => removeImage(`leftMessage_${item.id}`)}
                     className="p-1 rounded bg-rose-50 hover:bg-rose-100 text-rose-600 text-[9px] font-bold cursor-pointer"
@@ -199,15 +221,6 @@ export const PosterLeftColumn: React.FC<PosterLeftColumnProps> = ({ columns = 1 
             </div>
           );
         })}
-      </div>
-
-      {/* Wooden Signboard: "सुरक्षित स्थान, सुरक्षित बालबालिका" */}
-      <div className="pt-0.5 flex flex-col items-center shrink-0">
-        <div className="bg-gradient-to-r from-amber-800 via-amber-700 to-amber-900 text-amber-100 font-extrabold px-2 py-0.5 rounded text-center shadow-xs border border-amber-950 text-[8.5px] sm:text-[9.5px] w-full leading-tight">
-          सुरक्षित स्थान, सुरक्षित बालबालिका
-        </div>
-        {/* Wooden post leg */}
-        <div className="w-2.5 h-1.5 bg-amber-900 border-x border-amber-950 mx-auto" />
       </div>
     </div>
   );

@@ -166,18 +166,13 @@
     text-rendering: geometricPrecision !important;
   }
 
-  .square-text-card {
-    background-color: transparent !important;
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-  }
 }
 
-/* Transparent Text Container & Sharp White Halo Text for Visibility over Snakes/Ladders */
+/* Transparent text container: the square's own colorful background shows through.
+   Readability comes from the white halo on .square-text-box below, combined with
+   the text always being stacked above the snake/ladder SVG via z-index. */
 .square-text-card {
   background-color: transparent !important;
-  background: transparent !important;
   border: none !important;
   box-shadow: none !important;
 }

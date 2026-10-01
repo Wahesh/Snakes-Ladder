@@ -2,30 +2,12 @@ import React, { useState, useRef } from 'react';
 import { VillageFooterLandscape } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Upload, RotateCcw } from 'lucide-react';
-
-// Candidate asset paths to probe in public/assets and public/
-const CANDIDATE_ASSET_PATHS = [
-  '/assets/bottom-banner.png',
-  '/assets/image.png',
-  '/assets/bottom_banner.png',
-  '/assets/banner.png',
-  '/image.png',
-];
+import footerBannerDefault from '../assets/images/poster-defaults/footer-banner.png';
 
 export const PosterBottomFooter: React.FC = () => {
   const { footerBanner, updateImage, removeImage } = usePosterImages();
-  const [candidateIndex, setCandidateIndex] = useState(0);
-  const [allFailed, setAllFailed] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleImageError = () => {
-    if (candidateIndex < CANDIDATE_ASSET_PATHS.length - 1) {
-      setCandidateIndex((prev) => prev + 1);
-    } else {
-      setAllFailed(true);
-    }
-  };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -42,7 +24,7 @@ export const PosterBottomFooter: React.FC = () => {
     }
   };
 
-  const activeSrc = footerBanner || (!allFailed ? CANDIDATE_ASSET_PATHS[candidateIndex] : null);
+  const activeSrc = footerBanner || footerBannerDefault;
 
   return (
     <div className="relative w-full overflow-hidden rounded-b-xl border-t-2 border-emerald-600 shadow-md select-none bg-sky-300 group/footer shrink-0 h-[80px] sm:h-[95px] md:h-[110px]">
@@ -83,10 +65,7 @@ export const PosterBottomFooter: React.FC = () => {
           id="poster-bottom-banner-img"
           src={activeSrc}
           alt="PSEA Child Protection Banner - Child Helpline 1098"
-          className="w-full h-full object-cover object-center block select-none"
-          crossOrigin="anonymous"
-          referrerPolicy="no-referrer"
-          onError={handleImageError}
+          className="absolute inset-0 w-full h-full object-cover object-center select-none"
         />
       ) : (
         <div className="relative w-full h-full">

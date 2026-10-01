@@ -110,7 +110,8 @@ export const TargetSizeControls: React.FC<TargetSizeControlsProps> = ({
           posterElementRef.current,
           baseName,
           exportResolutionScale,
-          (prog) => setExportProgress(prog)
+          (prog) => setExportProgress(prog),
+          currentSize
         );
       } else if (format === 'jpeg') {
         await exportPosterAsJpeg(
@@ -118,7 +119,8 @@ export const TargetSizeControls: React.FC<TargetSizeControlsProps> = ({
           baseName,
           exportResolutionScale,
           0.95,
-          (prog) => setExportProgress(prog)
+          (prog) => setExportProgress(prog),
+          currentSize
         );
       } else if (format === 'pdf') {
         await exportPosterAsPdf(
