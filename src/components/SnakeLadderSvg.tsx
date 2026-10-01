@@ -252,22 +252,22 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                 d={pathD}
                 fill="none"
                 stroke={theme.spotsColor}
-                strokeWidth="16"
-                strokeLinecap="round"
-                strokeDasharray="7, 10"
+                strokeWidth="15"
+                strokeLinecap="butt"
+                strokeDasharray="6, 11"
                 strokeDashoffset="3"
-                opacity="0.9"
+                opacity="0.85"
               />
 
               {/* Layer 4: Cream Belly Stripe (centered, narrower, covers the middle of the tube) */}
-              <path d={pathD} fill="none" stroke={BELLY_COLOR} strokeWidth="9" strokeLinecap="round" />
+              <path d={pathD} fill="none" stroke={BELLY_COLOR} strokeWidth="8.5" strokeLinecap="butt" />
 
               {/* Layer 5: Belly Rib Ticks */}
               <path
                 d={pathD}
                 fill="none"
                 stroke={RIB_COLOR}
-                strokeWidth="9"
+                strokeWidth="8.5"
                 strokeLinecap="butt"
                 strokeDasharray="1.6, 7"
               />
@@ -275,47 +275,48 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
               {/* ================================================================= */}
               {/* CARTOON SNAKE HEAD WITH SNOUT (STATIC, MATCHES REFERENCE ART)     */}
               {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.95)`}>
-                {/* 1. Solid Black Head + Snout Contour Outline (two overlapping ellipses) */}
-                <ellipse cx="-3" cy="-2" rx="13" ry="14" fill="#0f172a" />
-                <ellipse cx="8" cy="4" rx="10" ry="8" fill="#0f172a" />
-
-                {/* 2. Skull + Snout Fill */}
-                <ellipse cx="-3" cy="-2" rx="11" ry="12" fill={theme.bodyColor} />
-                <ellipse cx="8" cy="4" rx="8.3" ry="6.3" fill={theme.bodyColor} />
-
-                {/* 3. Cream Chin/Snout Underside */}
-                <ellipse cx="7" cy="8" rx="7" ry="4.8" fill={BELLY_COLOR} />
-
-                {/* 4. Nostril Dots */}
-                <circle cx="14.5" cy="1" r="1" fill="#0f172a" />
-                <circle cx="15" cy="4" r="1" fill="#0f172a" />
-
-                {/* 5. Content Closed-Mouth Smile */}
-                <path d="M 0 7 Q 7 11.5 13 4.5" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
-
-                {/* 6. Forked Tongue Flicking from the Mouth Corner */}
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(1)`}>
+                {/* 1. Single-Path Head + Snout Silhouette (smooth, no seams) */}
                 <path
-                  d="M 13 5 L 19 9 M 19 9 L 23.5 6.5 M 19 9 L 21 13.5"
-                  stroke={theme.tongueColor}
-                  strokeWidth="2.4"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  d="M 0 -15 C 8 -16, 14 -12, 16 -6 C 17.5 -2, 17.5 3, 14 7 C 11 10.5, 6 11.5, 1 11 C -4 10.5, -8 9, -11 5.5 C -14.5 1.5, -15 -5, -12 -10 C -9.5 -14, -4 -16, 0 -15 Z"
+                  fill="#0f172a"
+                />
+                <path
+                  d="M 0 -13.3 C 7 -14.2, 12.4 -10.6, 14.1 -5.3 C 15.4 -1.8, 15.4 2.6, 12.4 6.2 C 9.7 9.3, 5.3 10.2, 0.9 9.7 C -3.5 9.3, -7 8, -9.7 4.9 C -12.9 1.3, -13.3 -4.4, -10.6 -8.8 C -8.4 -12.4, -3.5 -14.2, 0 -13.3 Z"
+                  fill={theme.bodyColor}
                 />
 
-                {/* 7. Big Round Friendly Eyes */}
-                <ellipse cx="-9" cy="-7" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="-8.4" cy="-6.5" r="3.4" fill="#0f172a" />
-                <circle cx="-10" cy="-8.5" r="1.1" fill="#ffffff" />
+                {/* 2. Cream Chin/Snout Underside */}
+                <ellipse cx="5" cy="7.5" rx="7.5" ry="4.2" fill={BELLY_COLOR} />
 
-                <ellipse cx="1" cy="-9" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="1.6" cy="-8.5" r="3.4" fill="#0f172a" />
-                <circle cx="-0.2" cy="-10.5" r="1.1" fill="#ffffff" />
+                {/* 3. Nostril Dots */}
+                <circle cx="12.5" cy="-2.5" r="0.9" fill="#0f172a" />
+                <circle cx="13" cy="0.5" r="0.9" fill="#0f172a" />
 
-                {/* 8. Subtle Brow Lines */}
-                <path d="M -14 -12.5 Q -9 -15 -4 -13" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
-                <path d="M -3.5 -14.5 Q 1 -17 5.5 -15" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
+                {/* 4. Content Closed-Mouth Smile */}
+                <path d="M 0 7.5 Q 6 10.5 11.5 4" fill="none" stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
+
+                {/* 5. Forked Tongue Flicking from the Mouth Corner */}
+                <path
+                  d="M 12 5 Q 17 6.5 19 4.5 M 17 6.5 Q 18.5 9 20.5 10"
+                  stroke={theme.tongueColor}
+                  strokeWidth="1.6"
+                  fill="none"
+                  strokeLinecap="round"
+                />
+
+                {/* 6. Big Round Friendly Eyes */}
+                <ellipse cx="-7" cy="-6" rx="4.6" ry="5.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
+                <circle cx="-6.5" cy="-5.5" r="2.8" fill="#0f172a" />
+                <circle cx="-7.8" cy="-7.2" r="0.9" fill="#ffffff" />
+
+                <ellipse cx="2.5" cy="-8" rx="4.6" ry="5.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.3" />
+                <circle cx="3" cy="-7.5" r="2.8" fill="#0f172a" />
+                <circle cx="1.7" cy="-9.2" r="0.9" fill="#ffffff" />
+
+                {/* 7. Subtle Brow Lines */}
+                <path d="M -11 -10.5 Q -7 -12.5 -3 -11" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
+                <path d="M -2 -12.5 Q 2 -14.5 6 -12.5" fill="none" stroke="#0f172a" strokeWidth="1.3" strokeLinecap="round" />
               </g>
             </g>
           );
