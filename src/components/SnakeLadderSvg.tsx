@@ -197,8 +197,10 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const hx = head.colFromLeft * 100 + 84;
           const hy = head.rowFromTop * 100 + 16;
 
-          // Tail on upper right or left corner of the box:
-          const tailCornerLeft = tail.colFromLeft <= head.colFromLeft;
+          // Tail on upper right or left corner of the box (per-snake tailSide
+          // overrides the auto left/right pick for cases that need fixing by hand):
+          const tailCornerLeft =
+            snake.tailSide === 'left' ? true : snake.tailSide === 'right' ? false : tail.colFromLeft <= head.colFromLeft;
           const tx = tailCornerLeft
             ? tail.colFromLeft * 100 + 22 // upper left corner
             : tail.colFromLeft * 100 + 78; // upper right corner
@@ -216,10 +218,11 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const perpX = -dy / (dist || 1);
           const perpY = dx / (dist || 1);
 
+          const curveMult2 = snake.curveMult2 ?? 0.85;
           let c1x = hx + dx * 0.32 + perpX * rawCurvature;
           let c1y = hy + dy * 0.32 + perpY * rawCurvature;
-          let c2x = hx + dx * 0.68 - perpX * (rawCurvature * 0.85);
-          let c2y = hy + dy * 0.68 - perpY * (rawCurvature * 0.85);
+          let c2x = hx + dx * 0.68 - perpX * (rawCurvature * curveMult2);
+          let c2y = hy + dy * 0.68 - perpY * (rawCurvature * curveMult2);
 
           // Keep bezier curves within board bounds
           c1x = Math.max(25, Math.min(975, c1x));
