@@ -216,13 +216,36 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
           const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
+          // Pointy tail tip: a tapered triangle continuing the tangent at the curve's
+          // end (strokes can't taper on their own, so this is a separate shape glued
+          // onto the butt-capped end of the body).
+          const tailTangentX = tx - c2x;
+          const tailTangentY = ty - c2y;
+          const tailTangentLen = Math.sqrt(tailTangentX * tailTangentX + tailTangentY * tailTangentY) || 1;
+          const tailDirX = tailTangentX / tailTangentLen;
+          const tailDirY = tailTangentY / tailTangentLen;
+          const tailPerpX = -tailDirY;
+          const tailPerpY = tailDirX;
+
+          const tailTip = (halfWidth: number, tipLength: number) => {
+            const baseLx = tx + tailPerpX * halfWidth;
+            const baseLy = ty + tailPerpY * halfWidth;
+            const baseRx = tx - tailPerpX * halfWidth;
+            const baseRy = ty - tailPerpY * halfWidth;
+            const tipX = tx + tailDirX * tipLength;
+            const tipY = ty + tailDirY * tipLength;
+            return `M ${baseLx} ${baseLy} L ${tipX} ${tipY} L ${baseRx} ${baseRy} Z`;
+          };
+
           return (
             <g key={`snake-${idx}`}>
               {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
-              <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="round" />
+              <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="butt" />
+              <path d={tailTip(11.5, 26)} fill="#0f172a" />
 
               {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel) */}
-              <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="round" />
+              <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="butt" />
+              <path d={tailTip(9, 21)} fill={theme.bodyColor} />
 
               {/* Layer 3: Dark Oval Spots (wider than the belly stripe, so they only show on the outer edges) */}
               <path
@@ -250,37 +273,43 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
               />
 
               {/* ================================================================= */}
-              {/* FRIENDLY CARTOON SNAKE HEAD (STATIC)                              */}
+              {/* DRAMATIC FUNNY CARTOON SNAKE HEAD (STATIC, OVERSIZED)             */}
               {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.62)`}>
-                {/* 1. Small Flicking Tongue */}
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(1.05)`}>
+                {/* 1. Flicking Tongue */}
                 <path
-                  d="M 6 8 L 14 12 M 14 12 L 19 9 M 14 12 L 17 17"
+                  d="M 6 8 L 15 13 M 15 13 L 21 9 M 15 13 L 19 19"
                   stroke={theme.tongueColor}
-                  strokeWidth="2.6"
+                  strokeWidth="2.8"
                   fill="none"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
 
                 {/* 2. Solid Black Head Contour Outline */}
-                <ellipse cx="0" cy="0" rx="16" ry="17" fill="#0f172a" />
+                <ellipse cx="0" cy="0" rx="17" ry="18" fill="#0f172a" />
 
                 {/* 3. Main Head Shape */}
-                <ellipse cx="0" cy="0.5" rx="14" ry="15" fill={theme.bodyColor} />
-                <ellipse cx="0" cy="6" rx="11" ry="7" fill={BELLY_COLOR} opacity="0.5" />
+                <ellipse cx="0" cy="0.5" rx="15" ry="16" fill={theme.bodyColor} />
+                <ellipse cx="0" cy="6.5" rx="11.5" ry="7.5" fill={BELLY_COLOR} opacity="0.5" />
 
-                {/* 4. Content Closed-Mouth Smile */}
-                <path d="M -7 6 Q 0 11 8 4" fill="none" stroke="#0f172a" strokeWidth="1.6" strokeLinecap="round" />
+                {/* 4. Big Dramatic Open Grin */}
+                <path d="M -9 4 Q 0 16 10 2 Q 5 9 0 8 Q -5 9 -9 4 Z" fill="#7f1d1d" stroke="#0f172a" strokeWidth="1.4" />
+                <path d="M -6.5 4.5 L -5.5 8 L -4.5 4.5 Z" fill="#ffffff" />
+                <path d="M 6.5 3 L 5.8 6.3 L 5 2.8 Z" fill="#ffffff" />
 
-                {/* 5. Big Round Friendly Eyes */}
-                <ellipse cx="-6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="-6" cy="-3.5" r="3.6" fill="#0f172a" />
-                <circle cx="-7.5" cy="-5.2" r="1.1" fill="#ffffff" />
+                {/* 5. Big Round Expressive Eyes */}
+                <ellipse cx="-7" cy="-5" rx="6.2" ry="7" fill="#ffffff" stroke="#0f172a" strokeWidth="1.5" />
+                <circle cx="-6.4" cy="-4.5" r="4" fill="#0f172a" />
+                <circle cx="-8.2" cy="-6.6" r="1.3" fill="#ffffff" />
 
-                <ellipse cx="6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="7" cy="-3.5" r="3.6" fill="#0f172a" />
-                <circle cx="5.5" cy="-5.2" r="1.1" fill="#ffffff" />
+                <ellipse cx="7" cy="-5" rx="6.2" ry="7" fill="#ffffff" stroke="#0f172a" strokeWidth="1.5" />
+                <circle cx="7.6" cy="-4.5" r="4" fill="#0f172a" />
+                <circle cx="5.8" cy="-6.6" r="1.3" fill="#ffffff" />
+
+                {/* 6. Raised, Dramatic Eyebrows */}
+                <path d="M -12.5 -12 Q -7 -16.5 -1.5 -12.5" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
+                <path d="M 1.5 -12.5 Q 7 -16.5 12.5 -12" fill="none" stroke="#0f172a" strokeWidth="2" strokeLinecap="round" />
               </g>
             </g>
           );
