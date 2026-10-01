@@ -1,6 +1,7 @@
 import React from 'react';
 import { LADDERS, SNAKES } from '../data/pseaData';
 import { getSquareCoord } from '../utils/boardCoordinates';
+import snakeRedImg from '../assets/images/snakes/snake-red.png';
 
 interface SnakeLadderSvgProps {
   showLadders?: boolean;
@@ -8,31 +9,18 @@ interface SnakeLadderSvgProps {
   opacity?: number;
 }
 
-// Friendly Cartoon Snake Palettes (Static Vector Art for Print)
-// Styled after a classic thick-bodied, round-eyed, scaled cartoon snake look:
-// one consistent friendly face template, varied only by color per snake.
-interface SnakeTheme {
-  id: string;
-  bodyColor: string;
-  bodyColorShade: string;
-  tongueColor: string;
-  patternType: 'scales' | 'bands';
-  scalesColor?: string;
-  bandColor?: string;
-}
+// Snake artwork: static PNG stickers (cartoon, transparent background) placed as a
+// single rigid image per snake, rotated and scaled so its head lands exactly on the
+// head square and its tail lands exactly on the tail square (a 2-point similarity
+// transform). More colors can be added to SNAKE_IMAGES later.
+const SNAKE_IMAGES: string[] = [snakeRedImg];
 
-const SNAKE_THEMES: SnakeTheme[] = [
-  { id: 'pink', bodyColor: '#ec4899', bodyColorShade: '#9d174d', scalesColor: '#fbcfe8', tongueColor: '#ef4444', patternType: 'scales' },
-  { id: 'lime', bodyColor: '#65a30d', bodyColorShade: '#365314', scalesColor: '#bef264', tongueColor: '#dc2626', patternType: 'scales' },
-  { id: 'orange', bodyColor: '#f97316', bodyColorShade: '#9a3412', scalesColor: '#fed7aa', tongueColor: '#be123c', patternType: 'scales' },
-  { id: 'cyan', bodyColor: '#06b6d4', bodyColorShade: '#155e75', scalesColor: '#a5f3fc', tongueColor: '#e11d48', patternType: 'scales' },
-  { id: 'purple', bodyColor: '#9333ea', bodyColorShade: '#581c87', scalesColor: '#e9d5ff', tongueColor: '#f43f5e', patternType: 'scales' },
-  { id: 'crimson', bodyColor: '#dc2626', bodyColorShade: '#7f1d1d', scalesColor: '#fca5a5', tongueColor: '#facc15', patternType: 'scales' },
-  { id: 'blue', bodyColor: '#2563eb', bodyColorShade: '#1e3a8a', scalesColor: '#93c5fd', tongueColor: '#ef4444', patternType: 'scales' },
-  { id: 'emerald', bodyColor: '#059669', bodyColorShade: '#064e3b', scalesColor: '#6ee7b7', tongueColor: '#ef4444', patternType: 'scales' },
-  { id: 'candycane', bodyColor: '#ef4444', bodyColorShade: '#991b1b', bandColor: '#facc15', tongueColor: '#1d4ed8', patternType: 'bands' },
-  { id: 'golden', bodyColor: '#eab308', bodyColorShade: '#78350f', scalesColor: '#fde68a', tongueColor: '#dc2626', patternType: 'scales' },
-];
+// Natural pixel size of the artwork, and where its head/tail anchor points sit
+// within that pixel space (head = top of head, tail = tip of tail).
+const SNAKE_IMAGE_WIDTH = 768;
+const SNAKE_IMAGE_HEIGHT = 1376;
+const SNAKE_HEAD_ANCHOR = { x: 393, y: 56 };
+const SNAKE_TAIL_ANCHOR = { x: 436, y: 1310 };
 
 export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
   showLadders = true,
@@ -61,15 +49,6 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           <stop offset="80%" stopColor="#854d0e" />
           <stop offset="100%" stopColor="#451a03" />
         </linearGradient>
-
-        {/* Soft top-light shading per snake, for a plush rounded-tube cartoon body */}
-        {SNAKE_THEMES.map((t) => (
-          <linearGradient key={t.id} id={`body-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor={t.bodyColor} />
-            <stop offset="55%" stopColor={t.bodyColor} />
-            <stop offset="100%" stopColor={t.bodyColorShade} />
-          </linearGradient>
-        ))}
       </defs>
 
       {/* ========================================================================= */}
@@ -162,7 +141,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
       {/* ========================================================================= */}
       {showSnakes &&
         SNAKES.map((snake, idx) => {
-          const theme = SNAKE_THEMES[idx % SNAKE_THEMES.length];
+          const snakeImg = SNAKE_IMAGES[idx % SNAKE_IMAGES.length];
           const head = getSquareCoord(snake.head);
           const tail = getSquareCoord(snake.tail);
 
@@ -180,135 +159,29 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const dx = tx - hx;
           const dy = ty - hy;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          // Bulge direction + strength are tuned per snake (see pseaData.ts) so each
-          // body routes around nearby ladders/snakes instead of crossing through them.
-          const dir = snake.curveDir ?? (idx % 2 === 0 ? 1 : -1);
-          const curveMult = snake.curveMult ?? 1;
-          const rawCurvature = Math.min(65, Math.max(30, dist * 0.28)) * curveMult * dir;
 
-          const perpX = -dy / (dist || 1);
-          const perpY = dx / (dist || 1);
+          // The artwork is a fixed pose, so it's placed as one rigid image: a
+          // 2-point similarity transform (rotate + uniform scale, no distortion)
+          // that maps the art's head anchor onto the head square and its tail
+          // anchor onto the tail square.
+          const localDx = SNAKE_TAIL_ANCHOR.x - SNAKE_HEAD_ANCHOR.x;
+          const localDy = SNAKE_TAIL_ANCHOR.y - SNAKE_HEAD_ANCHOR.y;
+          const localDist = Math.sqrt(localDx * localDx + localDy * localDy);
 
-          let c1x = hx + dx * 0.32 + perpX * rawCurvature;
-          let c1y = hy + dy * 0.32 + perpY * rawCurvature;
-          let c2x = hx + dx * 0.68 - perpX * (rawCurvature * 0.85);
-          let c2y = hy + dy * 0.68 - perpY * (rawCurvature * 0.85);
-
-          // Keep bezier curves within board bounds
-          c1x = Math.max(25, Math.min(975, c1x));
-          c1y = Math.max(25, Math.min(975, c1y));
-          c2x = Math.max(25, Math.min(975, c2x));
-          c2y = Math.max(25, Math.min(975, c2y));
-
-          const pathD = `M ${hx} ${hy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
-
-          // Direction tangent at head for angle
-          const headTangentX = c1x - hx;
-          const headTangentY = c1y - hy;
-          const headAngle = Math.atan2(headTangentY, headTangentX) * (180 / Math.PI);
-
-          // Clamp head rotation to a narrow range around its default upright pose so the
-          // head always stays tucked in the square's corner instead of swinging across
-          // the box and covering the text.
-          const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
-          const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
+          const scale = dist / localDist;
+          const rotationDeg =
+            (Math.atan2(dy, dx) - Math.atan2(localDy, localDx)) * (180 / Math.PI);
 
           return (
-            <g key={`snake-${idx}`}>
-              {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke="#0f172a"
-                strokeWidth="24"
-                strokeLinecap="round"
-              />
-
-              {/* Layer 2: Clean White Isolation Halo */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke="#ffffff"
-                strokeWidth="19"
-                strokeLinecap="round"
-              />
-
-              {/* Layer 3: Thick, Plush Cartoon Body (top-light gradient for a rounded tube feel) */}
-              <path
-                d={pathD}
-                fill="none"
-                stroke={`url(#body-grad-${theme.id})`}
-                strokeWidth="16"
-                strokeLinecap="round"
-              />
-
-              {/* Layer 4: Scale / Band Texture */}
-              {theme.patternType === 'scales' && (
-                <path
-                  d={pathD}
-                  fill="none"
-                  stroke={theme.scalesColor}
-                  strokeWidth="4.5"
-                  strokeLinecap="round"
-                  strokeDasharray="6, 9"
-                  strokeDashoffset="3"
-                  opacity="0.85"
-                />
-              )}
-
-              {theme.patternType === 'bands' && (
-                <path
-                  d={pathD}
-                  fill="none"
-                  stroke={theme.bandColor}
-                  strokeWidth="16"
-                  strokeLinecap="butt"
-                  strokeDasharray="14, 14"
-                />
-              )}
-
-              {/* ================================================================= */}
-              {/* FRIENDLY CARTOON SNAKE HEAD (STATIC)                              */}
-              {/* ================================================================= */}
-              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.62)`}>
-                {/* 1. Forked Tongue */}
-                <path
-                  d="M 0 12 L 0 24 M 0 24 L -6 31 M 0 24 L 6 31"
-                  stroke={theme.tongueColor}
-                  strokeWidth="3"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="-6" cy="31" r="1.4" fill={theme.tongueColor} />
-                <circle cx="6" cy="31" r="1.4" fill={theme.tongueColor} />
-
-                {/* 2. Solid Black Head Contour Outline */}
-                <ellipse cx="0" cy="0" rx="16" ry="17" fill="#0f172a" />
-
-                {/* 3. Main Head Shape */}
-                <ellipse cx="0" cy="0.5" rx="14" ry="15" fill={theme.bodyColor} />
-                <ellipse cx="0" cy="6" rx="11" ry="7" fill={theme.bodyColorShade} opacity="0.25" />
-
-                {/* 4. Open Friendly Smiling Mouth with Fangs */}
-                <path d="M -8 5 Q 0 15 8 5 Q 4 9.5 0 8.5 Q -4 9.5 -8 5 Z" fill="#7f1d1d" stroke="#0f172a" strokeWidth="1.2" />
-                <path d="M -4.5 6 L -3.5 10.5 L -2.5 6 Z" fill="#ffffff" />
-                <path d="M 4.5 6 L 3.5 10.5 L 2.5 6 Z" fill="#ffffff" />
-
-                {/* 5. Big Round Friendly Eyes */}
-                <ellipse cx="-6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="-6.5" cy="-3.5" r="3" fill="#0f172a" />
-                <circle cx="-7.8" cy="-5.2" r="1" fill="#ffffff" />
-
-                <ellipse cx="6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
-                <circle cx="6.5" cy="-3.5" r="3" fill="#0f172a" />
-                <circle cx="5.2" cy="-5.2" r="1" fill="#ffffff" />
-
-                {/* 6. Expressive Eyebrows */}
-                <path d="M -11 -10 Q -6.5 -13.5 -2 -10.5" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" />
-                <path d="M 2 -10.5 Q 6.5 -13.5 11 -10" fill="none" stroke="#0f172a" strokeWidth="1.8" strokeLinecap="round" />
-              </g>
-            </g>
+            <image
+              key={`snake-${idx}`}
+              href={snakeImg}
+              x={0}
+              y={0}
+              width={SNAKE_IMAGE_WIDTH}
+              height={SNAKE_IMAGE_HEIGHT}
+              transform={`translate(${hx} ${hy}) rotate(${rotationDeg}) scale(${scale}) translate(${-SNAKE_HEAD_ANCHOR.x} ${-SNAKE_HEAD_ANCHOR.y})`}
+            />
           );
         })}
     </svg>
