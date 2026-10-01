@@ -125,19 +125,34 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
         )}
       </div>
 
-      {/* 3. DECORATIVE GRASS TUFT on otherwise-empty squares for visual variety */}
+      {/* 3. DECORATIVE CARTOON BUSH on otherwise-empty squares for visual variety */}
       {info.hasGrass && !hasContentText && (
         <svg
           viewBox="0 0 40 40"
           className="absolute inset-0 w-full h-full pointer-events-none select-none"
           aria-hidden="true"
         >
-          <g transform="translate(20, 38)">
-            <path d="M0 0 C -2 -10, -4 -14, -7 -18" fill="none" stroke="#4ade80" strokeWidth="2.2" strokeLinecap="round" />
-            <path d="M0 0 C 0 -12, 0 -16, 0 -22" fill="none" stroke="#22c55e" strokeWidth="2.2" strokeLinecap="round" />
-            <path d="M0 0 C 2 -10, 4 -14, 7 -17" fill="none" stroke="#4ade80" strokeWidth="2.2" strokeLinecap="round" />
-            <path d="M-4 0 C -5 -7, -6 -9, -8 -11" fill="none" stroke="#86efac" strokeWidth="1.8" strokeLinecap="round" />
-            <path d="M4 0 C 5 -7, 6 -9, 9 -10" fill="none" stroke="#86efac" strokeWidth="1.8" strokeLinecap="round" />
+          <g transform="translate(20, 33)">
+            {/* Soft ground shadow */}
+            <ellipse cx="0" cy="6.5" rx="11" ry="2" fill="#15803d" opacity="0.18" />
+
+            {/* Puffy bush lobes (back row, darker) */}
+            <circle cx="-7" cy="1" r="6.2" fill="#16a34a" />
+            <circle cx="7" cy="1" r="6.2" fill="#16a34a" />
+            <circle cx="0" cy="-4" r="7.4" fill="#16a34a" />
+
+            {/* Puffy bush lobes (front row, lighter, for depth) */}
+            <circle cx="-6" cy="2.5" r="5.2" fill="#22c55e" />
+            <circle cx="6" cy="2.5" r="5.2" fill="#22c55e" />
+            <circle cx="0" cy="-2.5" r="6.4" fill="#4ade80" />
+
+            {/* Bright top highlight */}
+            <ellipse cx="-2.5" cy="-5.5" rx="3.2" ry="2.2" fill="#86efac" opacity="0.8" />
+
+            {/* Little leaf/berry accents */}
+            <circle cx="-9.5" cy="0.5" r="1.1" fill="#facc15" />
+            <circle cx="8.5" cy="2" r="1.1" fill="#fb923c" />
+            <circle cx="1.5" cy="-8.5" r="1" fill="#facc15" />
           </g>
         </svg>
       )}
