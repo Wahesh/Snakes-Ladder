@@ -137,7 +137,7 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
         <img
           src={bushImage}
           alt=""
-          className="absolute inset-0 w-full h-full object-contain p-1 pointer-events-none select-none"
+          className="absolute bottom-0 left-0 right-0 w-full h-[85%] object-contain object-bottom pointer-events-none select-none"
           aria-hidden="true"
         />
       )}
