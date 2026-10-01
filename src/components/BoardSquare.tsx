@@ -1,7 +1,9 @@
 import React from 'react';
 import { SQUARE_INFO } from '../data/boardSquaresMap';
 import { toNepaliNumber, LADDERS, SNAKES } from '../data/pseaData';
+import { getSquareCoord } from '../utils/boardCoordinates';
 import { Player } from '../types';
+import bushImage from '../assets/images/poster-defaults/bush.png';
 
 interface BoardSquareProps {
   squareNumber: number;
@@ -20,20 +22,25 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
   textSize = 'medium',
   highContrast = false,
 }) => {
-  const info = SQUARE_INFO[squareNumber] || {
-    num: squareNumber,
-    color: '#ffffff',
-  };
+  const info = SQUARE_INFO[squareNumber] || { num: squareNumber };
 
   const isSnakeHead = SNAKES.some((s) => s.head === squareNumber);
   const isLadderStart = LADDERS.some((l) => l.start === squareNumber);
 
-  // Colorful square background: each square carries its own color in the
-  // board data, so every box reads as a distinct, lively tile instead of
-  // plain white.
+  // Organized, rule-based background instead of ad-hoc per-square colors:
+  // squares with a game mechanic get a consistent semantic color (ladder =
+  // green, snake = red, question = gold, start/goal = their own accent),
+  // and every other square falls into a two-tone checkerboard so the board
+  // reads as a deliberate pattern rather than a random mix.
   const getSquareBgColor = () => {
     if (highContrast) return '#ffffff';
-    return info.color || '#ffffff';
+    if (info.isGoal) return '#fde68a';
+    if (info.isStart) return '#bbf7d0';
+    if (info.snakeTo !== undefined) return '#fecaca';
+    if (info.ladderTo !== undefined || info.hasLadderIcon) return '#bbf7d0';
+    if (info.isQuestion) return '#fef08a';
+    const { rowFromTop, colFromLeft } = getSquareCoord(squareNumber);
+    return (rowFromTop + colFromLeft) % 2 === 0 ? '#dbeafe' : '#ede9fe';
   };
 
   const getBorderClasses = () => {
@@ -127,34 +134,12 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
 
       {/* 3. DECORATIVE CARTOON BUSH on otherwise-empty squares for visual variety */}
       {info.hasGrass && !hasContentText && (
-        <svg
-          viewBox="0 0 40 40"
-          className="absolute inset-0 w-full h-full pointer-events-none select-none"
+        <img
+          src={bushImage}
+          alt=""
+          className="absolute inset-0 w-full h-full object-contain p-1 pointer-events-none select-none"
           aria-hidden="true"
-        >
-          <g transform="translate(20, 33)">
-            {/* Soft ground shadow */}
-            <ellipse cx="0" cy="6.5" rx="11" ry="2" fill="#15803d" opacity="0.18" />
-
-            {/* Puffy bush lobes (back row, darker) */}
-            <circle cx="-7" cy="1" r="6.2" fill="#16a34a" />
-            <circle cx="7" cy="1" r="6.2" fill="#16a34a" />
-            <circle cx="0" cy="-4" r="7.4" fill="#16a34a" />
-
-            {/* Puffy bush lobes (front row, lighter, for depth) */}
-            <circle cx="-6" cy="2.5" r="5.2" fill="#22c55e" />
-            <circle cx="6" cy="2.5" r="5.2" fill="#22c55e" />
-            <circle cx="0" cy="-2.5" r="6.4" fill="#4ade80" />
-
-            {/* Bright top highlight */}
-            <ellipse cx="-2.5" cy="-5.5" rx="3.2" ry="2.2" fill="#86efac" opacity="0.8" />
-
-            {/* Little leaf/berry accents */}
-            <circle cx="-9.5" cy="0.5" r="1.1" fill="#facc15" />
-            <circle cx="8.5" cy="2" r="1.1" fill="#fb923c" />
-            <circle cx="1.5" cy="-8.5" r="1" fill="#facc15" />
-          </g>
-        </svg>
+        />
       )}
 
       {/* 4. MAIN CONTENT: transparent text, always stacked above the snake/ladder SVG via z-index */}
