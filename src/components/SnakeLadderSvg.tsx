@@ -1,7 +1,6 @@
 import React from 'react';
 import { LADDERS, SNAKES } from '../data/pseaData';
 import { getSquareCoord } from '../utils/boardCoordinates';
-import snakeRedImg from '../assets/images/snakes/snake-red.png';
 
 interface SnakeLadderSvgProps {
   showLadders?: boolean;
@@ -9,18 +8,34 @@ interface SnakeLadderSvgProps {
   opacity?: number;
 }
 
-// Snake artwork: static PNG stickers (cartoon, transparent background) placed as a
-// single rigid image per snake, rotated and scaled so its head lands exactly on the
-// head square and its tail lands exactly on the tail square (a 2-point similarity
-// transform). More colors can be added to SNAKE_IMAGES later.
-const SNAKE_IMAGES: string[] = [snakeRedImg];
+// Vector snake skin, redrawn to match a reference sticker: thick glossy tube,
+// cream belly stripe with rib ticks down the center, dark oval spots on the
+// outer edges, bold black outline. The body shape still follows the tuned
+// bezier curve per snake (curveDir/curveMult in pseaData.ts) so it keeps
+// dodging ladders and square text instead of cutting straight across them.
+interface SnakeTheme {
+  id: string;
+  bodyColor: string;
+  bodyColorShade: string;
+  spotsColor: string;
+  tongueColor: string;
+}
 
-// Natural pixel size of the artwork, and where its head/tail anchor points sit
-// within that pixel space (head = top of head, tail = tip of tail).
-const SNAKE_IMAGE_WIDTH = 768;
-const SNAKE_IMAGE_HEIGHT = 1376;
-const SNAKE_HEAD_ANCHOR = { x: 393, y: 56 };
-const SNAKE_TAIL_ANCHOR = { x: 436, y: 1310 };
+const BELLY_COLOR = '#fde9c8';
+const RIB_COLOR = '#e8c99b';
+
+const SNAKE_THEMES: SnakeTheme[] = [
+  { id: 'red', bodyColor: '#ef4444', bodyColorShade: '#b91c1c', spotsColor: '#991b1b', tongueColor: '#dc2626' },
+  { id: 'orange', bodyColor: '#f97316', bodyColorShade: '#c2410c', spotsColor: '#9a3412', tongueColor: '#dc2626' },
+  { id: 'golden', bodyColor: '#eab308', bodyColorShade: '#a16207', spotsColor: '#854d0e', tongueColor: '#dc2626' },
+  { id: 'lime', bodyColor: '#65a30d', bodyColorShade: '#3f6212', spotsColor: '#365314', tongueColor: '#dc2626' },
+  { id: 'emerald', bodyColor: '#059669', bodyColorShade: '#065f46', spotsColor: '#064e3b', tongueColor: '#dc2626' },
+  { id: 'cyan', bodyColor: '#06b6d4', bodyColorShade: '#0e7490', spotsColor: '#155e75', tongueColor: '#e11d48' },
+  { id: 'blue', bodyColor: '#2563eb', bodyColorShade: '#1d4ed8', spotsColor: '#1e3a8a', tongueColor: '#dc2626' },
+  { id: 'purple', bodyColor: '#9333ea', bodyColorShade: '#7e22ce', spotsColor: '#581c87', tongueColor: '#dc2626' },
+  { id: 'magenta', bodyColor: '#ec4899', bodyColorShade: '#be185d', spotsColor: '#9d174d', tongueColor: '#dc2626' },
+  { id: 'brown', bodyColor: '#92400e', bodyColorShade: '#713f12', spotsColor: '#451a03', tongueColor: '#dc2626' },
+];
 
 export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
   showLadders = true,
@@ -49,6 +64,15 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           <stop offset="80%" stopColor="#854d0e" />
           <stop offset="100%" stopColor="#451a03" />
         </linearGradient>
+
+        {/* Soft top-light shading per snake, for a plush rounded-tube cartoon body */}
+        {SNAKE_THEMES.map((t) => (
+          <linearGradient key={t.id} id={`body-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={t.bodyColor} />
+            <stop offset="55%" stopColor={t.bodyColor} />
+            <stop offset="100%" stopColor={t.bodyColorShade} />
+          </linearGradient>
+        ))}
       </defs>
 
       {/* ========================================================================= */}
@@ -141,7 +165,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
       {/* ========================================================================= */}
       {showSnakes &&
         SNAKES.map((snake, idx) => {
-          const snakeImg = SNAKE_IMAGES[idx % SNAKE_IMAGES.length];
+          const theme = SNAKE_THEMES[idx % SNAKE_THEMES.length];
           const head = getSquareCoord(snake.head);
           const tail = getSquareCoord(snake.tail);
 
@@ -159,29 +183,106 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           const dx = tx - hx;
           const dy = ty - hy;
           const dist = Math.sqrt(dx * dx + dy * dy);
+          // Bulge direction + strength are tuned per snake (see pseaData.ts) so each
+          // body routes around nearby ladders/snakes instead of crossing through them.
+          const dir = snake.curveDir ?? (idx % 2 === 0 ? 1 : -1);
+          const curveMult = snake.curveMult ?? 1;
+          const rawCurvature = Math.min(65, Math.max(30, dist * 0.28)) * curveMult * dir;
 
-          // The artwork is a fixed pose, so it's placed as one rigid image: a
-          // 2-point similarity transform (rotate + uniform scale, no distortion)
-          // that maps the art's head anchor onto the head square and its tail
-          // anchor onto the tail square.
-          const localDx = SNAKE_TAIL_ANCHOR.x - SNAKE_HEAD_ANCHOR.x;
-          const localDy = SNAKE_TAIL_ANCHOR.y - SNAKE_HEAD_ANCHOR.y;
-          const localDist = Math.sqrt(localDx * localDx + localDy * localDy);
+          const perpX = -dy / (dist || 1);
+          const perpY = dx / (dist || 1);
 
-          const scale = dist / localDist;
-          const rotationDeg =
-            (Math.atan2(dy, dx) - Math.atan2(localDy, localDx)) * (180 / Math.PI);
+          let c1x = hx + dx * 0.32 + perpX * rawCurvature;
+          let c1y = hy + dy * 0.32 + perpY * rawCurvature;
+          let c2x = hx + dx * 0.68 - perpX * (rawCurvature * 0.85);
+          let c2y = hy + dy * 0.68 - perpY * (rawCurvature * 0.85);
+
+          // Keep bezier curves within board bounds
+          c1x = Math.max(25, Math.min(975, c1x));
+          c1y = Math.max(25, Math.min(975, c1y));
+          c2x = Math.max(25, Math.min(975, c2x));
+          c2y = Math.max(25, Math.min(975, c2y));
+
+          const pathD = `M ${hx} ${hy} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${tx} ${ty}`;
+
+          // Direction tangent at head for angle
+          const headTangentX = c1x - hx;
+          const headTangentY = c1y - hy;
+          const headAngle = Math.atan2(headTangentY, headTangentX) * (180 / Math.PI);
+
+          // Clamp head rotation to a narrow range around its default upright pose so the
+          // head always stays tucked in the square's corner instead of swinging across
+          // the box and covering the text.
+          const rawHeadRotation = ((headAngle - 90 + 180) % 360 + 360) % 360 - 180;
+          const headRotation = Math.max(-30, Math.min(30, rawHeadRotation));
 
           return (
-            <image
-              key={`snake-${idx}`}
-              href={snakeImg}
-              x={0}
-              y={0}
-              width={SNAKE_IMAGE_WIDTH}
-              height={SNAKE_IMAGE_HEIGHT}
-              transform={`translate(${hx} ${hy}) rotate(${rotationDeg}) scale(${scale}) translate(${-SNAKE_HEAD_ANCHOR.x} ${-SNAKE_HEAD_ANCHOR.y})`}
-            />
+            <g key={`snake-${idx}`}>
+              {/* Layer 1: Solid Dark Comic Contour Outline (100% Crisp Print Quality) */}
+              <path d={pathD} fill="none" stroke="#0f172a" strokeWidth="23" strokeLinecap="round" />
+
+              {/* Layer 2: Glossy Body Fill (top-light gradient for a rounded tube feel) */}
+              <path d={pathD} fill="none" stroke={`url(#body-grad-${theme.id})`} strokeWidth="18" strokeLinecap="round" />
+
+              {/* Layer 3: Dark Oval Spots (wider than the belly stripe, so they only show on the outer edges) */}
+              <path
+                d={pathD}
+                fill="none"
+                stroke={theme.spotsColor}
+                strokeWidth="16"
+                strokeLinecap="round"
+                strokeDasharray="7, 10"
+                strokeDashoffset="3"
+                opacity="0.9"
+              />
+
+              {/* Layer 4: Cream Belly Stripe (centered, narrower, covers the middle of the tube) */}
+              <path d={pathD} fill="none" stroke={BELLY_COLOR} strokeWidth="9" strokeLinecap="round" />
+
+              {/* Layer 5: Belly Rib Ticks */}
+              <path
+                d={pathD}
+                fill="none"
+                stroke={RIB_COLOR}
+                strokeWidth="9"
+                strokeLinecap="butt"
+                strokeDasharray="1.6, 7"
+              />
+
+              {/* ================================================================= */}
+              {/* FRIENDLY CARTOON SNAKE HEAD (STATIC)                              */}
+              {/* ================================================================= */}
+              <g transform={`translate(${hx}, ${hy}) rotate(${headRotation}) scale(0.62)`}>
+                {/* 1. Small Flicking Tongue */}
+                <path
+                  d="M 6 8 L 14 12 M 14 12 L 19 9 M 14 12 L 17 17"
+                  stroke={theme.tongueColor}
+                  strokeWidth="2.6"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                {/* 2. Solid Black Head Contour Outline */}
+                <ellipse cx="0" cy="0" rx="16" ry="17" fill="#0f172a" />
+
+                {/* 3. Main Head Shape */}
+                <ellipse cx="0" cy="0.5" rx="14" ry="15" fill={theme.bodyColor} />
+                <ellipse cx="0" cy="6" rx="11" ry="7" fill={BELLY_COLOR} opacity="0.5" />
+
+                {/* 4. Content Closed-Mouth Smile */}
+                <path d="M -7 6 Q 0 11 8 4" fill="none" stroke="#0f172a" strokeWidth="1.6" strokeLinecap="round" />
+
+                {/* 5. Big Round Friendly Eyes */}
+                <ellipse cx="-6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
+                <circle cx="-6" cy="-3.5" r="3.6" fill="#0f172a" />
+                <circle cx="-7.5" cy="-5.2" r="1.1" fill="#ffffff" />
+
+                <ellipse cx="6.5" cy="-4" rx="5.5" ry="6.2" fill="#ffffff" stroke="#0f172a" strokeWidth="1.4" />
+                <circle cx="7" cy="-3.5" r="3.6" fill="#0f172a" />
+                <circle cx="5.5" cy="-5.2" r="1.1" fill="#ffffff" />
+              </g>
+            </g>
           );
         })}
     </svg>
