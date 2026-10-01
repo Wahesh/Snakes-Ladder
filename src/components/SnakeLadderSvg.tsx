@@ -195,6 +195,15 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           <stop offset="80%" stopColor="#854d0e" />
           <stop offset="100%" stopColor="#451a03" />
         </linearGradient>
+
+        {/* Soft top-light shading per snake, for a plush rounded-tube cartoon body */}
+        {SNAKE_THEMES.map((t) => (
+          <linearGradient key={t.id} id={`body-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={t.bodyColor} />
+            <stop offset="55%" stopColor={t.bodyColor} />
+            <stop offset="100%" stopColor={t.bodyColorShade} />
+          </linearGradient>
+        ))}
       </defs>
 
       {/* ========================================================================= */}
@@ -345,7 +354,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                 d={pathD}
                 fill="none"
                 stroke="#0f172a"
-                strokeWidth="18"
+                strokeWidth="22"
                 strokeLinecap="round"
               />
 
@@ -354,16 +363,16 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                 d={pathD}
                 fill="none"
                 stroke="#ffffff"
-                strokeWidth="14"
+                strokeWidth="17.5"
                 strokeLinecap="round"
               />
 
-              {/* Layer 3: Vibrant Colorful Body */}
+              {/* Layer 3: Plush, Gently-Shaded Cartoon Body (top-light gradient for a rounded tube feel) */}
               <path
                 d={pathD}
                 fill="none"
-                stroke={theme.bodyColor}
-                strokeWidth="11"
+                stroke={`url(#body-grad-${theme.id})`}
+                strokeWidth="14"
                 strokeLinecap="round"
               />
 
@@ -372,9 +381,9 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                 d={pathD}
                 fill="none"
                 stroke={theme.bellyColor}
-                strokeWidth="4.5"
+                strokeWidth="6"
                 strokeLinecap="round"
-                strokeDasharray="8, 6"
+                strokeDasharray="9, 7"
               />
 
               {/* Layer 5: Funny Body Patterns (Polka, Stripes, Rings, Stars, Confetti) */}
@@ -383,7 +392,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                   d={pathD}
                   fill="none"
                   stroke={theme.spotsColor}
-                  strokeWidth="3.8"
+                  strokeWidth="4.6"
                   strokeLinecap="round"
                   strokeDasharray="3, 16"
                   strokeDashoffset="5"
@@ -395,7 +404,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                   d={pathD}
                   fill="none"
                   stroke={theme.spotsColor}
-                  strokeWidth="3.5"
+                  strokeWidth="4.2"
                   strokeLinecap="round"
                   strokeDasharray="6, 12"
                   strokeDashoffset="4"
@@ -407,7 +416,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                   d={pathD}
                   fill="none"
                   stroke={theme.spotsColor}
-                  strokeWidth="3.8"
+                  strokeWidth="4.6"
                   strokeLinecap="round"
                   strokeDasharray="2.5, 18"
                   strokeDashoffset="6"
@@ -419,7 +428,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                   d={pathD}
                   fill="none"
                   stroke={theme.spotsColor}
-                  strokeWidth="3.8"
+                  strokeWidth="4.6"
                   strokeLinecap="round"
                   strokeDasharray="4, 15"
                   strokeDashoffset="4"
@@ -431,7 +440,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                   d={pathD}
                   fill="none"
                   stroke={theme.spotsColor}
-                  strokeWidth="3.5"
+                  strokeWidth="4.2"
                   strokeLinecap="round"
                   strokeDasharray="3, 18"
                   strokeDashoffset="7"
@@ -444,7 +453,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                     d={pathD}
                     fill="none"
                     stroke="#38bdf8"
-                    strokeWidth="3"
+                    strokeWidth="3.6"
                     strokeLinecap="round"
                     strokeDasharray="3, 18"
                   />
@@ -452,7 +461,7 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
                     d={pathD}
                     fill="none"
                     stroke="#ec4899"
-                    strokeWidth="3"
+                    strokeWidth="3.6"
                     strokeLinecap="round"
                     strokeDasharray="3, 18"
                     strokeDashoffset="9"
