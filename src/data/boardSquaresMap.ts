@@ -60,7 +60,7 @@ export const SQUARE_INFO: Record<number, SquareData> = {
   45: { num: 45 },
   46: { num: 46 },
   47: { num: 47 },
-  48: { num: 48, text: 'सहायता पाउनु कसैले पनि फाइदा भन्ने सोच्नुभयो ।', snakeTo: 33 },
+  48: { num: 48, text: 'सहायताको बदलामा केही दिनुपर्छ भन्ने सोच्नुभयो।', snakeTo: 33 },
   49: { num: 49 },
   50: { num: 50, hasLadderIcon: true },
   51: { num: 51 },
