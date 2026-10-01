@@ -1,5 +1,6 @@
 import React from 'react';
 import { PhoneCall, ShieldCheck, Trophy, Lock, Dices } from 'lucide-react';
+import unNepalLogo from '../assets/images/un-nepal-logo.png';
 
 interface BoardRulesAndEmergencyProps {
   showGameRules?: boolean;
@@ -89,8 +90,9 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
         </div>
       )}
 
-      {/* 2. EMERGENCY HELPLINES BAR: Sleek, high-visibility, compact */}
-      <div className="w-full bg-gradient-to-r from-red-700 via-rose-600 to-red-700 text-white border-2 border-red-800 rounded-xl px-2 sm:px-2.5 py-1.5 shadow-sm flex flex-col gap-1">
+      {/* 2. EMERGENCY HELPLINES BAR (left) + UN Nepal Helpline (right) */}
+      <div className="w-full flex items-stretch gap-1.5">
+      <div className="flex-1 min-w-0 bg-gradient-to-r from-red-700 via-rose-600 to-red-700 text-white border-2 border-red-800 rounded-xl px-2 sm:px-2.5 py-1 shadow-sm flex flex-col gap-0.5">
         {/* Header line with Confidentiality & Free Service Guarantee */}
         <div className="flex items-center justify-between px-0.5 text-[10px] sm:text-[11px] font-black">
           <div className="flex items-center gap-1.5">
@@ -113,37 +115,37 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
         {/* 4 Hotlines Grid - Single sleek horizontal strip */}
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2 text-slate-900">
           {/* Hotline 1: 1098 */}
-          <div className="bg-white rounded-lg px-2 py-1 flex items-center gap-2 shadow-2xs border border-red-200">
+          <div className="bg-white rounded-lg px-1.5 py-0.5 flex items-center gap-1.5 shadow-2xs border border-red-200">
             <div className="bg-red-700 text-white font-black text-xs sm:text-sm px-1.5 py-0.5 rounded tracking-wider shrink-0 text-center">
               १०९८
             </div>
             <div className="flex flex-col justify-center min-w-0 leading-tight">
-              <span className="text-[11px] sm:text-xs font-black text-slate-900 truncate">
+              <span className="text-[11px] sm:text-xs font-black text-slate-900">
                 बाल हेल्पलाइन
               </span>
-              <span className="text-[8.5px] sm:text-[9.5px] text-red-700 font-bold truncate">
+              <span className="text-[8.5px] sm:text-[9.5px] text-red-700 font-bold">
                 Child Helpline
               </span>
             </div>
           </div>
 
           {/* Hotline 2: 100 */}
-          <div className="bg-white rounded-lg px-2 py-1 flex items-center gap-2 shadow-2xs border border-blue-200">
+          <div className="bg-white rounded-lg px-1.5 py-0.5 flex items-center gap-1.5 shadow-2xs border border-blue-200">
             <div className="bg-blue-800 text-white font-black text-xs sm:text-sm px-1.5 py-0.5 rounded tracking-wider shrink-0 text-center">
               १००
             </div>
             <div className="flex flex-col justify-center min-w-0 leading-tight">
-              <span className="text-[11px] sm:text-xs font-black text-slate-900 truncate">
+              <span className="text-[11px] sm:text-xs font-black text-slate-900">
                 नेपाल प्रहरी
               </span>
-              <span className="text-[8.5px] sm:text-[9.5px] text-blue-800 font-bold truncate">
+              <span className="text-[8.5px] sm:text-[9.5px] text-blue-800 font-bold">
                 Nepal Police
               </span>
             </div>
           </div>
 
           {/* Hotline 3: 104 */}
-          <div className="bg-white rounded-lg px-2 py-1 flex items-center gap-2 shadow-2xs border border-amber-200">
+          <div className="bg-white rounded-lg px-1.5 py-0.5 flex items-center gap-1.5 shadow-2xs border border-amber-200">
             <div className="bg-amber-600 text-white font-black text-xs sm:text-sm px-1.5 py-0.5 rounded tracking-wider shrink-0 text-center">
               १०४
             </div>
@@ -151,27 +153,39 @@ export const BoardRulesAndEmergency: React.FC<BoardRulesAndEmergencyProps> = ({
               <span className="text-[11px] sm:text-xs font-black text-slate-900">
                 बालबालिका खोजतलास
               </span>
-              <span className="text-[8.5px] sm:text-[9.5px] text-amber-800 font-bold truncate">
+              <span className="text-[8.5px] sm:text-[9.5px] text-amber-800 font-bold">
                 Missing Child
               </span>
             </div>
           </div>
 
           {/* Hotline 4: 1145 */}
-          <div className="bg-white rounded-lg px-2 py-1 flex items-center gap-2 shadow-2xs border border-purple-200">
+          <div className="bg-white rounded-lg px-1.5 py-0.5 flex items-center gap-1.5 shadow-2xs border border-purple-200">
             <div className="bg-purple-700 text-white font-black text-xs sm:text-sm px-1.5 py-0.5 rounded tracking-wider shrink-0 text-center">
               ११४५
             </div>
             <div className="flex flex-col justify-center min-w-0 leading-tight">
-              <span className="text-[11px] sm:text-xs font-black text-slate-900 truncate">
+              <span className="text-[11px] sm:text-xs font-black text-slate-900">
                 महिला आयोग
               </span>
-              <span className="text-[8.5px] sm:text-[9.5px] text-purple-800 font-bold truncate">
+              <span className="text-[8.5px] sm:text-[9.5px] text-purple-800 font-bold">
                 Women Helpline
               </span>
             </div>
           </div>
         </div>
+      </div>
+
+      {/* UN Nepal Helpline Panel */}
+      <div className="w-[22%] sm:w-[20%] shrink-0 bg-white border-2 border-slate-300 rounded-xl px-1.5 py-1 shadow-sm flex flex-col items-center justify-center text-center gap-0.5">
+        <img src={unNepalLogo} alt="United Nations Nepal" className="w-full h-auto select-none" />
+        <div className="text-[10px] sm:text-[11.5px] font-black text-red-700 leading-none">
+          ०१-४२९००९८
+        </div>
+        <div className="text-[5.5px] sm:text-[6px] text-slate-700 leading-tight">
+          (संयुक्त राष्ट्रसंघका कर्मचारी संलग्न भएका अवस्थामा)
+        </div>
+      </div>
       </div>
     </div>
   );

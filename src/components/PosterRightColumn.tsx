@@ -115,15 +115,15 @@ export const PosterRightColumn: React.FC = () => {
           <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>राहत सामग्रीको बदलामा अनुचित फाइदा माग्नु ।</span>
+              <span>राहत सामग्रीको बदलामा अनुचित फाइदा माग्नु ।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>विशेष सुविधा दिने आशा देखाउनु ।</span>
+              <span>पैसा, उपहार वा अन्य सुविधाको प्रलोभन दिएर यौन गतिविधिमा संलग्न गराउनु।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>सहयोग नदिने धम्की दिनु ।</span>
+              <span>सहयोग नदिने धम्की दिनु ।</span>
             </li>
           </ul>
         </div>
@@ -203,15 +203,15 @@ export const PosterRightColumn: React.FC = () => {
           <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>कसैको इच्छा विपरीत छुनु ।</span>
+              <span>कसैको इच्छा विपरीत छुनु ।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>डर, धम्की वा दबाब दिएर अनुचित व्यवहार गर्नु ।</span>
+              <span>डर, धम्की वा दबाब दिएर अनुचित व्यवहार गर्नु ।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>कुनै पनि अवाञ्छित यौन व्यवहार गर्नु ।</span>
+              <span>कुनै पनि अवाञ्छित यौन व्यवहार गर्नु ।</span>
             </li>
           </ul>
         </div>
@@ -291,15 +291,15 @@ export const PosterRightColumn: React.FC = () => {
           <ul className="text-[10px] sm:text-[11.5px] md:text-xs font-black text-slate-900 space-y-0.5 leading-[1.1]">
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>अशोभनीय टिप्पणी गर्नु वा जिस्क्याउनु ।</span>
+              <span>अशोभनीय टिप्पणी गर्नु वा जिस्क्याउनु ।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>बारम्बार अवाञ्छित सन्देश वा कल पठाउनु ।</span>
+              <span>बारम्बार अवाञ्छित सन्देश वा कल पठाउनु ।</span>
             </li>
             <li className="flex items-start gap-1.5">
               <span className="text-red-600 font-black text-xs sm:text-sm leading-none shrink-0 mt-0.5">•</span>
-              <span>पटक-पटक निजी भेटघाटको प्रस्ताव राख्नु ।</span>
+              <span>पटक-पटक निजी भेटघाटको प्रस्ताव राख्नु ।</span>
             </li>
           </ul>
         </div>

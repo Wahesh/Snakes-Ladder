@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { VillageFooterLandscape } from './CartoonIllustrations';
 import { usePosterImages } from '../context/PosterImageContext';
 import { Upload, RotateCcw } from 'lucide-react';
-import footerBannerDefault from '../assets/images/poster-defaults/footer-banner.jpg';
+import footerBannerDefault from '../assets/images/poster-defaults/footer-banner.png';
 
 export const PosterBottomFooter: React.FC = () => {
   const { footerBanner, updateImage, removeImage } = usePosterImages();
