@@ -201,10 +201,13 @@ export const SnakeLadderSvg: React.FC<SnakeLadderSvgProps> = ({
           // overrides the auto left/right pick for cases that need fixing by hand):
           const tailCornerLeft =
             snake.tailSide === 'left' ? true : snake.tailSide === 'right' ? false : tail.colFromLeft <= head.colFromLeft;
-          const tx = tailCornerLeft
-            ? tail.colFromLeft * 100 + 22 // upper left corner
-            : tail.colFromLeft * 100 + 78; // upper right corner
-          const ty = tail.rowFromTop * 100 + 24; // upper corner
+          const tx =
+            snake.tailOffsetX !== undefined
+              ? tail.colFromLeft * 100 + snake.tailOffsetX
+              : tailCornerLeft
+              ? tail.colFromLeft * 100 + 22 // upper left corner
+              : tail.colFromLeft * 100 + 78; // upper right corner
+          const ty = tail.rowFromTop * 100 + (snake.tailOffsetY ?? 24); // upper corner (or overridden)
 
           const dx = tx - hx;
           const dy = ty - hy;

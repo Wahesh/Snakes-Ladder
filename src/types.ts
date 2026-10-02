@@ -23,6 +23,11 @@ export interface Snake {
    * default (left if the tail column is left of or equal to the head column, else
    * right). Used to fix individual snakes whose auto-picked side looks wrong. */
   tailSide?: 'left' | 'right';
+  /** Overrides where within the tail square (0-100 on each axis, square-local) the
+   * tail tip lands, instead of the default corner position. Use to land a tail in
+   * the square's center instead of tucked into a corner. */
+  tailOffsetX?: number;
+  tailOffsetY?: number;
 }
 
 export interface SpecialSquare {

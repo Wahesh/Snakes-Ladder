@@ -88,6 +88,9 @@ export const SNAKES: Snake[] = [
     message: 'कसैले उपहार दिएर गोप्य राख्न भन्यो । तर तपाईंले कसैलाई भन्नुभएन ।',
     curveDir: -1,
     curveMult: 2,
+    curveMult2: -1.2,
+    tailOffsetX: 50,
+    tailOffsetY: 50,
   },
   {
     head: 48,
