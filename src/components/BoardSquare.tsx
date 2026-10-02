@@ -144,8 +144,8 @@ export const BoardSquare: React.FC<BoardSquareProps> = ({
 
       {/* 4. MAIN CONTENT: transparent text, always stacked above the snake/ladder SVG via z-index */}
       {hasContentText && (
-        <div className="relative w-full h-full pt-5 sm:pt-5.5 md:pt-6 px-0.5 pb-1 flex flex-col items-center justify-center z-20 min-h-0 pointer-events-none">
-          <div className="w-full flex-1 flex flex-col items-center justify-center p-0.5 text-center square-text-card">
+        <div className="relative w-full h-full pt-5 sm:pt-5.5 md:pt-6 px-0.5 pb-1 flex flex-col items-center justify-start z-20 min-h-0 pointer-events-none">
+          <div className="w-full flex-1 flex flex-col items-center justify-start p-0.5 text-center square-text-card">
             {info.isGoal ? (
               <div className="w-full flex flex-col items-center justify-center text-center px-0.5">
                 <span className="block text-amber-950 font-black text-[8px] sm:text-[9px] md:text-[10px] leading-tight square-text-box">

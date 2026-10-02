@@ -139,16 +139,14 @@
     overflow: visible !important;
     white-space: normal !important;
     text-shadow:
-      -1.5px -1.5px 0 #ffffff,
-       1.5px -1.5px 0 #ffffff,
-      -1.5px  1.5px 0 #ffffff,
-       1.5px  1.5px 0 #ffffff,
-       0px   -1.5px 0 #ffffff,
-       0px    1.5px 0 #ffffff,
-      -1.5px  0px   0 #ffffff,
-       1.5px  0px   0 #ffffff,
-       0px    0px   4px #ffffff,
-       0px    0px   8px #ffffff !important;
+      -1px -1px 0 #ffffff,
+       1px -1px 0 #ffffff,
+      -1px  1px 0 #ffffff,
+       1px  1px 0 #ffffff,
+       0px -1px 0 #ffffff,
+       0px  1px 0 #ffffff,
+      -1px  0px 0 #ffffff,
+       1px  0px 0 #ffffff !important;
   }
 
   /* Crisp Print Vector Overrides - No Blurry Filters */
@@ -182,14 +180,12 @@
   overflow-wrap: break-word;
   white-space: normal;
   text-shadow:
-    -1.5px -1.5px 0 #ffffff,
-     1.5px -1.5px 0 #ffffff,
-    -1.5px  1.5px 0 #ffffff,
-     1.5px  1.5px 0 #ffffff,
-     0px   -1.5px 0 #ffffff,
-     0px    1.5px 0 #ffffff,
-    -1.5px  0px   0 #ffffff,
-     1.5px  0px   0 #ffffff,
-     0px    0px   4px #ffffff,
-     0px    0px   8px #ffffff;
+    -1px -1px 0 #ffffff,
+     1px -1px 0 #ffffff,
+    -1px  1px 0 #ffffff,
+     1px  1px 0 #ffffff,
+     0px -1px 0 #ffffff,
+     0px  1px 0 #ffffff,
+    -1px  0px 0 #ffffff,
+     1px  0px 0 #ffffff;
 }
