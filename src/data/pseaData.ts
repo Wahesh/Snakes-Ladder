@@ -98,6 +98,9 @@ export const SNAKES: Snake[] = [
     message: 'सहायता पाउन केही साट्नुपर्छ भन्ने सोच्नुभयो ।',
     curveDir: -1,
     curveMult: 2,
+    curveMult2: -1.2,
+    tailOffsetX: 50,
+    tailOffsetY: 50,
   },
   {
     head: 59,
