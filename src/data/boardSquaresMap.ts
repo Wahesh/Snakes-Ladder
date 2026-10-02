@@ -73,7 +73,7 @@ export const SQUARE_INFO: Record<number, SquareData> = {
   58: { num: 58, text: 'कसैले तपाईंलाई असहज महसुस गराए के गर्नुहुन्छ ?', isQuestion: true },
   59: { num: 59, text: 'कसैले तपाईंसँग असुरक्षित व्यवहार गर्दा पनि विश्वसनीय व्यक्त्तिलाई भन्नुभएन ।', snakeTo: 38 },
   60: { num: 60 },
-  61: { num: 61, text: 'कसैले तपाईंको सीमाना नाघ्दा तपाईंले आवाज उठाउनुभयो ।', ladderTo: 79, hasLadderIcon: true },
+  61: { num: 61, text: 'कसैले मन नपर्ने व्यवहार गर्दा तपाईंले आवाज उठाउनुभयो ।', ladderTo: 79, hasLadderIcon: true },
   62: { num: 62 },
   63: { num: 63, hasGrass: true },
   64: { num: 64, hasLadderIcon: true },
