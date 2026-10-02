@@ -112,7 +112,7 @@ export const SNAKES: Snake[] = [
   {
     head: 66,
     tail: 46,
-    message: 'कसैले एक्लै भेट्न र गोप्य राख्न भन्यो । तपाईले मान्नु भएन ।',
+    message: 'कसैले एक्लै भेट्न र गोप्य राख्न भन्दा तपाईले मान्नु भयो ।',
     curveDir: -1,
     curveMult: 1,
     curveMult2: -0.6,

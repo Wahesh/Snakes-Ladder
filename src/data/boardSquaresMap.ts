@@ -78,7 +78,7 @@ export const SQUARE_INFO: Record<number, SquareData> = {
   63: { num: 63, hasGrass: true },
   64: { num: 64, hasLadderIcon: true },
   65: { num: 65, hasGrass: true },
-  66: { num: 66, text: 'कसैले एक्लै भेट्न र गोप्य राख्न भन्यो । तपाईले मान्नु भएन ।', snakeTo: 46 },
+  66: { num: 66, text: 'कसैले एक्लै भेट्न र गोप्य राख्न भन्दा तपाईले मान्नु भयो ।', snakeTo: 46 },
   67: { num: 67 },
   68: { num: 68 },
   69: { num: 69 },
